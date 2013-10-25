@@ -10,11 +10,10 @@
  * @param int The user ID
  * @param string A file name to be excluded from the removal
  */
-
 function remove_profilepic($uid, $exclude="")
 {
-	global $mybb, $plugins;
-	
+	global $mybb;
+
 	if(defined('IN_ADMINCP'))
 	{
 		$profilepicpath = '../'.$mybb->settings['profilepicuploadpath'];
@@ -23,13 +22,12 @@ function remove_profilepic($uid, $exclude="")
 	{
 		$profilepicpath = $mybb->settings['profilepicuploadpath'];
 	}
-	
+
 	$dir = opendir($profilepicpath);
 	if($dir)
 	{
 		while($file = @readdir($dir))
 		{
-			
 			if(preg_match("#profilepic_".$uid."\.#", $file) && is_file($profilepicpath."/".$file) && $file != $exclude)
 			{
 				@unlink($profilepicpath."/".$file);
@@ -49,8 +47,8 @@ function remove_profilepic($uid, $exclude="")
  */
 function upload_profilepic($profilepic=array(), $uid=0)
 {
-	global $db, $mybb, $lang, $plugins;
-	
+	global $db, $mybb, $lang;
+
 	if(!$uid)
 	{
 		$uid = $mybb->user['uid'];
@@ -74,7 +72,7 @@ function upload_profilepic($profilepic=array(), $uid=0)
 		$ret['error'] = $lang->error_profilepictype;
 		return $ret;
 	}
-	
+
 	if(defined('IN_ADMINCP'))
 	{
 		$profilepicpath = '../'.$mybb->settings['profilepicuploadpath'];
@@ -84,7 +82,7 @@ function upload_profilepic($profilepic=array(), $uid=0)
 	{
 		$profilepicpath = $mybb->settings['profilepicuploadpath'];
 	}
-	
+
 	$filename = "profilepic_".$uid.".".$ext;
 	$file = upload_profilepicfile($profilepic, $profilepicpath, $filename);
 	if($file['error'])
@@ -94,7 +92,6 @@ function upload_profilepic($profilepic=array(), $uid=0)
 		return $ret;
 	}	
 
-
 	// Lets just double check that it exists
 	if(!file_exists($profilepicpath."/".$filename))
 	{
@@ -102,7 +99,7 @@ function upload_profilepic($profilepic=array(), $uid=0)
 		@unlink($profilepicpath."/".$filename);
 		return $ret;
 	}
-	
+
 	// Check if this is a valid image or not
 	$img_dimensions = @getimagesize($profilepicpath."/".$filename);
 	if(!is_array($img_dimensions))
@@ -111,7 +108,7 @@ function upload_profilepic($profilepic=array(), $uid=0)
 		$ret['error'] = $lang->error_uploadfailed;
 		return $ret;
 	}
-	
+
 	// Check profile picture dimensions
 	if($mybb->usergroup['profilepicmaxdimensions'] != '')
 	{
@@ -150,7 +147,7 @@ function upload_profilepic($profilepic=array(), $uid=0)
 			}			
 		}
 	}
-	
+
 	// Next check the file size
 	if($profilepic['size'] > ($mybb->usergroup['profilepicmaxsize']*1024) && $mybb->usergroup['profilepicmaxsize'] > 0)
 	{
@@ -179,7 +176,7 @@ function upload_profilepic($profilepic=array(), $uid=0)
 		default:
 			$img_type = 0;
 	}
-	
+
 	// Check if the uploaded file type matches the correct image type (returned by getimagesize)
 	if($img_dimensions[2] != $img_type || $img_type == 0)
 	{
@@ -207,8 +204,6 @@ function upload_profilepic($profilepic=array(), $uid=0)
  */
 function upload_profilepicfile($file, $path, $filename="")
 {
-	global $plugins;
-	
 	if(empty($file['name']) || $file['name'] == "none" || $file['size'] < 1)
 	{
 		$upload['error'] = 1;
@@ -219,11 +214,11 @@ function upload_profilepicfile($file, $path, $filename="")
 	{
 		$filename = $file['name'];
 	}
-	
+
 	$upload['original_filename'] = preg_replace("#/$#", "", $file['name']); // Make the filename safe
 	$filename = preg_replace("#/$#", "", $filename); // Make the filename safe
 	$moved = @move_uploaded_file($file['tmp_name'], $path."/".$filename);
-	
+
 	if(!$moved)
 	{
 		$upload['error'] = 2;

@@ -63,7 +63,7 @@ function profilepic_info()
 		"website"			=> "http://galaxiesrealm.com/index.php",
 		"author"			=> "Starpaul20",
 		"authorsite"		=> "http://galaxiesrealm.com/index.php",
-		"version"			=> "1.1",
+		"version"			=> "1.1.1",
 		"guid"				=> "6933b5e447616dcf957439a9945b24a8",
 		"compatibility"		=> "16*"
 	);
@@ -336,7 +336,7 @@ function profilepic_run()
 		require_once MYBB_ROOT."inc/functions_profilepic.php";
 		$profilepic_error = "";
 
-		if($mybb->input['remove']) // remove profile pic
+		if($mybb->input['remove']) // remove profile picture
 		{
 			$updated_profilepic = array(
 				"profilepic" => "",
@@ -346,7 +346,7 @@ function profilepic_run()
 			$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 			remove_profilepic($mybb->user['uid']);
 		}
-		elseif($_FILES['profilepicupload']['name']) // upload profile pic
+		elseif($_FILES['profilepicupload']['name']) // upload profile picture
 		{
 			if($mybb->usergroup['canuploadprofilepic'] == 0)
 			{
@@ -371,12 +371,12 @@ function profilepic_run()
 				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 			}
 		}
-		else // remote profile pic
+		else // remote profile picture
 		{
 			$mybb->input['profilepicurl'] = preg_replace("#script:#i", "", $mybb->input['profilepicurl']);
 			$ext = get_extension($mybb->input['profilepicurl']);
 
-			// Copy the profile pic to the local server (work around remote URL access disabled for getimagesize)
+			// Copy the profile picture to the local server (work around remote URL access disabled for getimagesize)
 			$file = fetch_remote_file($mybb->input['profilepicurl']);
 			if(!$file)
 			{
@@ -523,7 +523,7 @@ function profilepic_profile()
 		{
 			$profilepic_width_height = "width=\"{$profilepic_dimensions[0]}\" height=\"{$profilepic_dimensions[1]}\"";
 		}
-		$profilepic_img = "<img src=\"{$memprofile['profilepic']}\" alt=\"\" $profilepic_width_height />";
+		$profilepic_img = "<img src=\"{$memprofile['profilepic']}\" alt=\"\" {$profilepic_width_height} />";
 
 		eval("\$profilepic = \"".$templates->get("member_profile_profilepic")."\";");
 	}
@@ -596,7 +596,7 @@ function profilepic_user_delete()
 function profilepic_usergroup_permission()
 {
 	global $mybb, $lang, $form, $form_container, $run_module;
-	$lang->load("profilepic");
+	$lang->load("profilepic", true);
 
 	if($run_module == 'user' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc)
 	{
