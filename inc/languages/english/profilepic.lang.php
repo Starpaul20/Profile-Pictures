@@ -40,5 +40,6 @@ $l['error_profilepictoobig'] = "Sorry but we cannot change your profile picture 
 $l['error_profilepicresizefailed'] = "Your profile picture was unable to be resized so that it is within the required dimensions.";
 $l['error_profilepicuserresize'] = "You can also try checking the 'attempt to resize my profile picture' check box and uploading the same image again.";
 $l['error_uploadsize'] = "The size of the uploaded file is too large.";
+$l['error_descriptiontoobig'] = "Your profile picture description is too long. The maximum length for descriptions is 255 characters.";
 
 ?>

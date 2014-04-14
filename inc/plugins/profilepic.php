@@ -400,6 +400,13 @@ function profilepic_run()
 			{
 				error_no_permission();
 			}
+
+			// See if profile picture description is too long
+			if(my_strlen($mybb->input['profilepicdescription']) > 255)
+			{
+				$profilepic_error = $lang->error_descriptiontoobig;
+			}
+
 			$profilepic = upload_profilepic();
 			if($profilepic['error'])
 			{
@@ -420,7 +427,7 @@ function profilepic_run()
 				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 			}
 		}
-		else // remote profile picture
+		elseif($mybb->input['profilepicurl']) // remote profile picture
 		{
 			$mybb->input['profilepicurl'] = preg_replace("#script:#i", "", $mybb->input['profilepicurl']);
 			$ext = get_extension($mybb->input['profilepicurl']);
@@ -452,6 +459,12 @@ function profilepic_run()
 				}
 			}
 
+			// See if profile picture description is too long
+			if(my_strlen($mybb->input['profilepicdescription']) > 255)
+			{
+				$profilepic_error = $lang->error_descriptiontoobig;
+			}
+
 			if(empty($profilepic_error))
 			{
 				if($width && $height && $mybb->usergroup['profilepicmaxdimensions'] != "")
@@ -479,6 +492,22 @@ function profilepic_run()
 				);
 				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 				remove_profilepic($mybb->user['uid']);
+			}
+		}
+		else // just updating profile picture description
+		{
+			// See if profile picture description is too long
+			if(my_strlen($mybb->input['profilepicdescription']) > 255)
+			{
+				$profilepic_error = $lang->error_descriptiontoobig;
+			}
+
+			if(empty($profilepic_error))
+			{
+				$updated_profilepic = array(
+					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
+				);
+				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 			}
 		}
 
