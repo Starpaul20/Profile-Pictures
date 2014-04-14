@@ -21,6 +21,7 @@ $l['change_profilepicture'] = "Change Profile Picture";
 $l['change_picture'] = "Change Picture";
 $l['remove_picture'] = "Remove Picture";
 $l['profilepic_url'] = "Profile Picture URL:";
+$l['profilepic_description'] = "Profile Picture Description:";
 $l['profilepic_upload'] = "Upload Profile Picture:";
 $l['profilepic_note'] = "A profile picture is a small identifying image shown in a user's profile.";
 $l['profilepic_note_dimensions'] = "The maximum dimensions for profile pictures are: {1}x{2} pixels.";

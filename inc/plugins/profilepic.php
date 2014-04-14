@@ -18,7 +18,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'usercp.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'usercp_profilepic,usercp_profilepic_current,usercp_profilepic_upload,usercp_nav_profilepic';
+	$templatelist .= 'usercp_profilepic,usercp_profilepic_current,usercp_profilepic_description,usercp_profilepic_upload,usercp_nav_profilepic';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
@@ -38,7 +38,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'member_profile_profilepic';
+	$templatelist .= 'member_profile_profilepic,member_profile_profilepic_description';
 }
 
 // Tell MyBB when to run the hooks
@@ -78,6 +78,7 @@ function profilepic_install()
 	$db->add_column("users", "profilepic", "varchar(200) NOT NULL default ''");
 	$db->add_column("users", "profilepicdimensions", "varchar(10) NOT NULL default ''");
 	$db->add_column("users", "profilepictype", "varchar(10) NOT NULL default ''");
+	$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
 
 	$db->add_column("usergroups", "canuseprofilepic", "int(1) NOT NULL default '1'");
 	$db->add_column("usergroups", "canuploadprofilepic", "int(1) NOT NULL default '1'");
@@ -118,6 +119,11 @@ function profilepic_uninstall()
 		$db->drop_column("users", "profilepictype");
 	}
 
+	if($db->field_exists("profilepicdescription", "users"))
+	{
+		$db->drop_column("users", "profilepicdescription");
+	}
+
 	if($db->field_exists("canuseprofilepic", "usergroups"))
 	{
 		$db->drop_column("usergroups", "canuseprofilepic");
@@ -145,6 +151,13 @@ function profilepic_uninstall()
 function profilepic_activate()
 {
 	global $db;
+
+	// Upgrade support (from 1.1.x to 1.2)
+	if(!$db->field_exists("profilepicdescription", "users"))
+	{
+		$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
+	}
+
 	$query = $db->simple_select("settinggroups", "gid", "name='member'");
 	$gid = intval($db->fetch_field($query, "gid"));
 
@@ -170,6 +183,17 @@ disabled=Disable this feature',
 		'value' => 'auto',
 		'disporder' => 36,
 		'gid' => $gid
+	);
+	$db->insert_query("settings", $insertarray);
+
+	$insertarray = array(
+		'name' => 'profilepicdescription',
+		'title' => 'Profile Picture Description',
+		'description' => 'If you wish allow your users to enter an optional description for their profile picture, set this option to yes.',
+		'optionscode' => 'yesno',
+		'value' => 1,
+		'disporder' => 37,
+		'gid' => intval($gid)
 	);
 	$db->insert_query("settings", $insertarray);
 
@@ -212,6 +236,7 @@ disabled=Disable this feature',
 <td class="trow2" width="40%"><strong>{$lang->profilepic_url}</strong></td>
 <td class="trow2" width="60%"><input type="text" class="textbox" name="profilepicurl" size="45" value="{$profilepicurl}" /></td>
 </tr>
+{$profilepicdescription}
 </table>
 <br />
 <div align="center">
@@ -249,9 +274,31 @@ disabled=Disable this feature',
 <td class="thead"><strong>{$lang->users_profilepic}</strong></td>
 </tr>
 <tr>
-<td class="trow1" align="center">{$profilepic_img}</td>
+<td class="trow1" align="center">{$profilepic_img}<br />
+{$description}</td>
 </tr>
 </table>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
+		'title'		=> 'member_profile_profilepic_description',
+		'template'	=> $db->escape_string('<span class="smalltext"><em>{$memprofile[\'profilepicdescription\']}</em></span>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
+		'title'		=> 'usercp_profilepic_description',
+		'template'	=> $db->escape_string('<tr>
+<td class="trow1" width="40%"><strong>{$lang->profilepic_description}</strong></td>
+<td class="trow1" width="60%"><input type="text" class="textbox" name="profilepicdescription" size="100" value="{$description}" /></td>
+</tr>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -294,8 +341,8 @@ disabled=Disable this feature',
 function profilepic_deactivate()
 {
 	global $db;
-	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing')");
-	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_current','member_profile_profilepic','usercp_profilepic_upload','usercp_nav_profilepic')");
+	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription')");
+	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic')");
 	rebuild_settings();
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
@@ -341,7 +388,8 @@ function profilepic_run()
 			$updated_profilepic = array(
 				"profilepic" => "",
 				"profilepicdimensions" => "",
-				"profilepictype" => ""
+				"profilepictype" => "",
+				"profilepicdescription" => ""
 			);
 			$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 			remove_profilepic($mybb->user['uid']);
@@ -366,7 +414,8 @@ function profilepic_run()
 				$updated_profilepic = array(
 					"profilepic" => $profilepic['profilepic'].'?dateline='.TIME_NOW,
 					"profilepicdimensions" => $profilepic_dimensions,
-					"profilepictype" => "upload"
+					"profilepictype" => "upload",
+					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
 				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 			}
@@ -425,7 +474,8 @@ function profilepic_run()
 				$updated_profilepic = array(
 					"profilepic" => $db->escape_string($mybb->input['profilepicurl'].'?dateline='.TIME_NOW),
 					"profilepicdimensions" => $profilepic_dimensions,
-					"profilepictype" => "remote"
+					"profilepictype" => "remote",
+					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
 				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
 				remove_profilepic($mybb->user['uid']);
@@ -502,6 +552,13 @@ function profilepic_run()
 			eval("\$profilepicupload = \"".$templates->get("usercp_profilepic_upload")."\";");
 		}
 
+		$description = htmlspecialchars_uni($mybb->user['profilepicdescription']);
+
+		if($mybb->settings['profilepicdescription'] == 1)
+		{
+			eval("\$profilepicdescription = \"".$templates->get("usercp_profilepic_description")."\";");
+		}
+
 		eval("\$profilepicture = \"".$templates->get("usercp_profilepic")."\";");
 		output_page($profilepicture);
 	}
@@ -510,7 +567,7 @@ function profilepic_run()
 // Profile Picture display in profile
 function profilepic_profile()
 {
-	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepic;
+	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepic, $description;
 	$lang->load("profilepic");
 
 	$lang->users_profilepic = $lang->sprintf($lang->users_profilepic, $memprofile['username']);
@@ -524,6 +581,12 @@ function profilepic_profile()
 			$profilepic_width_height = "width=\"{$profilepic_dimensions[0]}\" height=\"{$profilepic_dimensions[1]}\"";
 		}
 		$profilepic_img = "<img src=\"{$memprofile['profilepic']}\" alt=\"\" {$profilepic_width_height} />";
+
+		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicdescription'] == 1)
+		{
+			$memprofile['profilepicdescription'] = htmlspecialchars_uni($memprofile['profilepicdescription']);
+			eval("\$description = \"".$templates->get("member_profile_profilepic_description")."\";");
+		}
 
 		eval("\$profilepic = \"".$templates->get("member_profile_profilepic")."\";");
 	}
