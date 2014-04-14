@@ -41,6 +41,16 @@ if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
 	$templatelist .= 'member_profile_profilepic,member_profile_profilepic_description';
 }
 
+if(my_strpos($_SERVER['PHP_SELF'], 'modcp.php'))
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'modcp_editprofile_profilepic_description';
+}
+
 // Tell MyBB when to run the hooks
 $plugins->add_hook("usercp_start", "profilepic_run");
 $plugins->add_hook("usercp_menu_built", "profilepic_nav");
@@ -329,12 +339,26 @@ disabled=Disable this feature',
 	);
 	$db->insert_query("templates", $insert_array);
 
+	$insert_array = array(
+		'title'		=> 'modcp_editprofile_profilepic_description',
+		'template'	=> $db->escape_string('<tr>
+<td colspan="3"><span class="smalltext">{$lang->profilepic_description}</span></td>
+</tr>
+<tr>
+<td colspan="3"><textarea name="profilepicdescription" id="profilepicdescription" rows="4" cols="30">{$user[\'profilepicdescription\']}</textarea></td>
+</tr>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('{$changesigop}')."#i", '{$changesigop}<!-- profilepic -->');
 	find_replace_templatesets("member_profile", "#".preg_quote('{$profilefields}')."#i", '{$profilefields}{$profilepic}');
 	find_replace_templatesets("modcp_editprofile", "#".preg_quote('{$lang->remove_avatar}</label></span></td>
 										</tr>')."#i", '{$lang->remove_avatar}</label></span></td>
-										</tr><tr><td colspan="3"><span class="smalltext"><label><input type="checkbox" class="checkbox" name="remove_profilepic" value="1" /> {$lang->remove_profile_picture}</label></span></td></tr>');
+										</tr><tr><td colspan="3"><span class="smalltext"><label><input type="checkbox" class="checkbox" name="remove_profilepic" value="1" /> {$lang->remove_profile_picture}</label></span></td></tr>{$profilepicdescription}');
 }
 
 // This function runs when the plugin is deactivated.
@@ -342,13 +366,13 @@ function profilepic_deactivate()
 {
 	global $db;
 	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription')");
-	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic')");
+	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic_description')");
 	rebuild_settings();
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("member_profile", "#".preg_quote('{$profilepic}')."#i", '', 0);
 	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('<!-- profilepic -->')."#i", '', 0);
-	find_replace_templatesets("modcp_editprofile", "#".preg_quote('<tr><td colspan="3"><span class="smalltext"><label><input type="checkbox" class="checkbox" name="remove_profilepic" value="1" /> {$lang->remove_profile_picture}</label></span></td></tr>')."#i", '', 0);
+	find_replace_templatesets("modcp_editprofile", "#".preg_quote('<tr><td colspan="3"><span class="smalltext"><label><input type="checkbox" class="checkbox" name="remove_profilepic" value="1" /> {$lang->remove_profile_picture}</label></span></td></tr>{$profilepicdescription}')."#i", '', 0);
 }
 
 // User CP Nav link
@@ -663,13 +687,29 @@ function profilepic_removal()
 
 		$db->update_query("users", $updated_profilepic, "uid='{$user['uid']}'");
 	}
+
+	// Update description if active
+	if($mybb->settings['profilepicdescription'] == 1)
+	{
+		$updated_profilepic = array(
+			"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
+		);
+		$db->update_query("users", $updated_profilepic, "uid='{$user['uid']}'");
+	}
 }
 
 // Mod CP language
 function profilepic_removal_lang()
 {
-	global $lang;
+	global $mybb, $lang, $user, $templates, $profilepicdescription;
 	$lang->load("profilepic");
+
+	$user['profilepicdescription'] = htmlspecialchars_uni($user['profilepicdescription']);
+
+	if($mybb->settings['profilepicdescription'] == 1)
+	{
+		eval("\$profilepicdescription = \"".$templates->get("modcp_editprofile_profilepic_description")."\";");
+	}
 }
 
 // Delete profile picture if user is deleted
