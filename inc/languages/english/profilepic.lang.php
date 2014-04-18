@@ -7,7 +7,7 @@
 $l['profile_picture'] = "Profile Picture";
 $l['users_profilepic'] = "{1}'s Profile Picture";
 $l['changing_profilepic'] = "<a href=\"usercp.php?action=profilepic\">Changing Profile Picture</a>";
-$l['remove_profile_picture'] = "Remove users profile picture?";
+$l['remove_profile_picture'] = "Remove user's profile picture?";
 $l['can_use_profilepic'] = "Can use profile picture?";
 $l['can_upload_profilepic'] = "Can upload profile picture?";
 $l['profile_pic_size'] = "Maximum File Size:";
