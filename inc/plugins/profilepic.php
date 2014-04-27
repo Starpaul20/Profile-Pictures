@@ -177,7 +177,7 @@ function profilepic_activate()
 		'description' => 'This is the path where profile pictures will be uploaded to. This directory <strong>must be chmod 777</strong> (writable) for uploads to work.',
 		'optionscode' => 'text',
 		'value' => './uploads/profilepics',
-		'disporder' => 35,
+		'disporder' => 36,
 		'gid' => $gid
 	);
 	$db->insert_query("settings", $insertarray);
@@ -191,7 +191,7 @@ auto=Automatically resize large profile pictures
 user=Give users the choice of resizing large profile pictures
 disabled=Disable this feature',
 		'value' => 'auto',
-		'disporder' => 36,
+		'disporder' => 37,
 		'gid' => $gid
 	);
 	$db->insert_query("settings", $insertarray);
@@ -202,7 +202,7 @@ disabled=Disable this feature',
 		'description' => 'If you wish allow your users to enter an optional description for their profile picture, set this option to yes.',
 		'optionscode' => 'yesno',
 		'value' => 1,
-		'disporder' => 37,
+		'disporder' => 38,
 		'gid' => intval($gid)
 	);
 	$db->insert_query("settings", $insertarray);
@@ -424,7 +424,7 @@ function profilepic_run()
 				"profilepictype" => "",
 				"profilepicdescription" => ""
 			);
-			$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
+			$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
 			remove_profilepic($mybb->user['uid']);
 		}
 		elseif($_FILES['profilepicupload']['name']) // upload profile picture
@@ -457,7 +457,7 @@ function profilepic_run()
 					"profilepictype" => "upload",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
-				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
+				$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
 			}
 		}
 		elseif($mybb->input['profilepicurl']) // remote profile picture
@@ -523,7 +523,7 @@ function profilepic_run()
 					"profilepictype" => "remote",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
-				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
+				$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
 				remove_profilepic($mybb->user['uid']);
 			}
 		}
@@ -540,7 +540,7 @@ function profilepic_run()
 				$updated_profilepic = array(
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
-				$db->update_query("users", $updated_profilepic, "uid='".$mybb->user['uid']."'");
+				$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
 			}
 		}
 
@@ -557,8 +557,8 @@ function profilepic_run()
 
 	if($mybb->input['action'] == "profilepic")
 	{
-		add_breadcrumb($lang->nav_usercp);
-		add_breadcrumb($lang->change_profilepicture);
+		add_breadcrumb($lang->nav_usercp, "usercp.php");
+		add_breadcrumb($lang->change_profilepicture, "usercp.php?action=profilepic");
 
 		// Show main profile picture page
 		if($mybb->usergroup['canuseprofilepic'] == 0)
