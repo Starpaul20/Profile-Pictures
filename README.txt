@@ -1,6 +1,6 @@
 ## INFORMATION ##
 
-Profile Picture (1.1.1) for MyBB 1.6
+Profile Picture (1.2) for MyBB 1.6
 Created by: Starpaul20
 Copyright: ©2010
 License: GPL
@@ -23,4 +23,4 @@ The setting for this plugin are located under the 'User Registration and Profile
 
 ## UPDATING ##
 
-If you're updating from any previous version, you only need to overwrite old files with the new ones, no need to deactivate.
+If you're updating from any previous version, you must first deactivate the plugin (do not install), upload all new files and reactivate.

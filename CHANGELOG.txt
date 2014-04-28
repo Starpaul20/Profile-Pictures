@@ -1,3 +1,9 @@
+1.2
+- Added optional description for profile pictures (Issue #1)
+- Fixed grammar issue in Mod CP
+- Moved some HTML code to template
+- Fixed wrong breadcrumb location
+
 1.1.1
 - Bug: Fixed language error for 1.6.11
 

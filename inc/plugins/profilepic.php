@@ -73,7 +73,7 @@ function profilepic_info()
 		"website"			=> "http://galaxiesrealm.com/index.php",
 		"author"			=> "Starpaul20",
 		"authorsite"		=> "http://galaxiesrealm.com/index.php",
-		"version"			=> "1.1.1",
+		"version"			=> "1.2",
 		"guid"				=> "6933b5e447616dcf957439a9945b24a8",
 		"compatibility"		=> "16*"
 	);
