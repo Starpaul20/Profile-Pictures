@@ -92,10 +92,10 @@ function profilepic_install()
 	$db->add_column("users", "profilepictype", "varchar(10) NOT NULL default ''");
 	$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
 
-	$db->add_column("usergroups", "canuseprofilepic", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "canuploadprofilepic", "int(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "profilepicmaxsize", "bigint(30) NOT NULL default '40'");
-	$db->add_column("usergroups", "profilepicmaxdimensions", "varchar(50) NOT NULL default '200x200'");
+	$db->add_column("usergroups", "canuseprofilepic", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "canuploadprofilepic", "tinyint(1) NOT NULL default '1'");
+	$db->add_column("usergroups", "profilepicmaxsize", "int unsigned NOT NULL default '40'");
+	$db->add_column("usergroups", "profilepicmaxdimensions", "varchar(10) NOT NULL default '200x200'");
 
 	$cache->update_usergroups();
 }
@@ -163,12 +163,6 @@ function profilepic_uninstall()
 function profilepic_activate()
 {
 	global $db;
-
-	// Upgrade support (from 1.1.x to 1.2)
-	if(!$db->field_exists("profilepicdescription", "users"))
-	{
-		$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
-	}
 
 	$query = $db->simple_select("settinggroups", "gid", "name='member'");
 	$gid = $db->fetch_field($query, "gid");
