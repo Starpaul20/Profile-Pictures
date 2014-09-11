@@ -4,19 +4,19 @@
 
 ## Version number reset for MyBB 1.8 ##
 
-1.2
+1.2 (April 28th, 2014)
 - Added optional description for profile pictures (Issue #1)
 - Fixed grammar issue in Mod CP
 - Moved some HTML code to template
 - Fixed wrong breadcrumb location
 
-1.1.1
+1.1.1 (October 25th, 2013)
 - Bug: Fixed language error for 1.6.11
 
-1.1
+1.1 (November 26th, 2011)
 - Delete profile picture if user is deleted
 - Updated plugin with 1.6.5 plugin system updates
 - Optimization and general plugin updating
 
-1.0
+1.0 (November 1st, 2010)
 - Initial release
