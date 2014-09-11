@@ -243,47 +243,49 @@ x=X',
 {$header}
 <table width="100%" border="0" align="center">
 <tr>
-{$usercpnav}
-<td valign="top">
-{$profilepic_error}
-<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
-<tr>
-<td class="thead" colspan="2"><strong>{$lang->change_profilepicture}</strong></td>
-</tr>
-<tr>
-<td class="trow1" colspan="2">
-<table cellspacing="0" cellpadding="0" width="100%"><tr>
-<td>{$lang->profilepic_note}{$profilepicmsg}
-</td>
-{$currentprofilepic}
-</tr></table>
-</td>
-</tr>
-<tr>
-<td class="tcat" colspan="2"><strong>{$lang->custom_profile_pic}</strong></td>
-</tr>
-<form enctype="multipart/form-data" action="usercp.php" method="post">
-<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
-{$profilepicupload}
-<tr>
-	<td class="trow2" width="40%">
-		<strong>{$lang->profilepic_url}</strong>
-		<br /><span class="smalltext">{$lang->profilepic_url_note}</span>
+	{$usercpnav}
+	<td valign="top">
+		{$profilepic_error}
+		<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
+			<tr>
+				<td class="thead" colspan="2"><strong>{$lang->change_profilepicture}</strong></td>
+			</tr>
+			<tr>
+				<td class="trow1" colspan="2">
+					<table cellspacing="0" cellpadding="0" width="100%">
+						<tr>
+							<td>{$lang->profilepic_note}{$profilepicmsg}
+							{$currentprofilepic}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="tcat" colspan="2"><strong>{$lang->custom_profile_pic}</strong></td>
+			</tr>
+			<form enctype="multipart/form-data" action="usercp.php" method="post">
+			<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
+			{$profilepicupload}
+			<tr>
+				<td class="trow2" width="40%">
+					<strong>{$lang->profilepic_url}</strong>
+					<br /><span class="smalltext">{$lang->profilepic_url_note}</span>
+				</td>
+				<td class="trow2" width="60%">
+					<input type="text" class="textbox" name="profilepicurl" size="45" value="{$profilepicurl}" />
+					<br /><span class="smalltext">{$lang->profilepic_url_gravatar}</span>
+				</td>
+			</tr>
+			{$profilepicdescription}
+		</table>
+		<br />
+		<div align="center">
+			<input type="hidden" name="action" value="do_profilepic" />
+			<input type="submit" class="button" name="submit" value="{$lang->change_picture}" />
+			<input type="submit" class="button" name="remove" value="{$lang->remove_picture}" />
+		</div>
 	</td>
-	<td class="trow2" width="60%">
-		<input type="text" class="textbox" name="profilepicurl" size="45" value="{$profilepicurl}" />
-		<br /><span class="smalltext">{$lang->profilepic_url_gravatar}</span>
-	</td>
-</tr>
-{$profilepicdescription}
-</table>
-<br />
-<div align="center">
-<input type="hidden" name="action" value="do_profilepic" />
-<input type="submit" class="button" name="submit" value="{$lang->change_picture}" />
-<input type="submit" class="button" name="remove" value="{$lang->remove_picture}" />
-</div>
-</td>
 </tr>
 </table>
 </form>
@@ -736,6 +738,7 @@ function profilepic_profile()
 	$profilepic = $profilepic_img = '';
 	if($memprofile['profilepic'])
 	{
+		$memprofile['profilepic'] = htmlspecialchars_uni($memprofile['profilepic']);
 		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
 		eval("\$profilepic_img = \"".$templates->get("member_profile_profilepic_profilepic")."\";");
 
@@ -763,7 +766,7 @@ function profilepic_online_activity($user_activity)
 
 function profilepic_online_location($plugin_array)
 {
-    global $db, $mybb, $lang, $parameters;
+	global $db, $mybb, $lang, $parameters;
 	$lang->load("profilepic");
 
 	if($plugin_array['user_activity']['activity'] == "usercp_profilepic")
