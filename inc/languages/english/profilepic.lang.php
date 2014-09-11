@@ -37,6 +37,7 @@ $l['profilepic_auto_resize_note'] = "If your profile picture is too large, it wi
 $l['profilepic_auto_resize_option'] = "Try to resize my profile picture if it is too large.";
 $l['redirect_profilepicupdated'] = "Your profile picture has been changed successfully.<br />You will now be returned to your User CP.";
 $l['using_remote_profilepic'] = "You are currently using an remote profile picture.";
+$l['profile_picture_mine'] = "This is your Profile Picture";
 
 $l['error_uploadfailed'] = "The file upload failed. Please choose a valid file and try again. ";
 $l['error_profilepictype'] = "Invalid file type. An uploaded profile picture must be in GIF, JPEG, or PNG format.";

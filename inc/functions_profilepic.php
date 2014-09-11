@@ -231,4 +231,69 @@ function upload_profilepicfile($file, $path, $filename="")
 	$upload['size'] = $file['size'];
 	return $upload;
 }
+
+/**
+ * Formats a profile picture to a certain dimension
+ *
+ * @param string The profile picture file name
+ * @param string Dimensions of the profile picture, width x height (e.g. 44|44)
+ * @param string The maximum dimensions of the formatted profile picture
+ * @return array Information for the formatted profile picture
+ */
+function format_profile_picture($profilepicture, $dimensions = '', $max_dimensions = '')
+{
+	global $mybb;
+	static $profilepictures;
+
+	if(!isset($profilepictures))
+	{
+		$profilepictures = array();
+	}
+
+	if(!$profilepicture)
+	{
+		// Default profile picture
+		$profilepicture = '';
+		$dimensions = '';
+	}
+
+	if(isset($profilepictures[$profilepicture]))
+	{
+		return $profilepictures[$profilepicture];
+	}
+
+	if(!$max_dimensions)
+	{
+		$max_dimensions = $mybb->usergroup['profilepicmaxdimensions'];
+	}
+
+	if($dimensions)
+	{
+		$dimensions = explode("|", $dimensions);
+
+		if($dimensions[0] && $dimensions[1])
+		{
+			list($max_width, $max_height) = explode('x', $max_dimensions);
+
+			if($dimensions[0] > $max_width || $dimensions[1] > $max_height)
+			{
+				require_once MYBB_ROOT."inc/functions_image.php";
+				$scaled_dimensions = scale_image($dimensions[0], $dimensions[1], $max_width, $max_height);
+				$profilepicture_width_height = "width=\"{$scaled_dimensions['width']}\" height=\"{$scaled_dimensions['height']}\"";
+			}
+			else
+			{
+				$profilepicture_width_height = "width=\"{$dimensions[0]}\" height=\"{$dimensions[1]}\"";
+			}
+		}
+	}
+
+	$profilepictures[$profilepicture] = array(
+		'image' => $mybb->get_asset_url($profilepicture),
+		'width_height' => $profilepicture_width_height
+	);
+
+	return $profilepictures[$profilepicture];
+}
+
 ?>

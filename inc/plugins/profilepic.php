@@ -316,7 +316,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic_current',
-		'template'	=> $db->escape_string('<td class="trow1" width="150" align="right"><img src="{$urltoprofilepic}" alt="{$lang->profile_picture}" title="{$lang->profile_picture}" {$profilepic_width_height} /></td>'),
+		'template'	=> $db->escape_string('<td width="150" align="right"><img src="{$userprofilepicture[\'image\']}" alt="{$lang->profile_picture_mine}" title="{$lang->profile_picture_mine}" {$userprofilepicture[\'width_height\']} /></td>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -352,7 +352,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'member_profile_profilepic_profilepic',
-		'template'	=> $db->escape_string('<img src="{$memprofile[\'profilepic\']}" alt="" {$profilepic_width_height} />'),
+		'template'	=> $db->escape_string('<img src="{$userprofilepicture[\'image\']}" alt="" {$userprofilepicture[\'width_height\']} />'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -458,6 +458,7 @@ function profilepic_run()
 {
 	global $db, $mybb, $lang, $templates, $theme, $headerinclude, $usercpnav, $header, $profilepic, $footer;
 	$lang->load("profilepic");
+	require_once MYBB_ROOT."inc/functions_profilepic.php";
 
 	if($mybb->input['action'] == "do_profilepic" && $mybb->request_method == "post")
 	{
@@ -469,7 +470,6 @@ function profilepic_run()
 			error_no_permission();
 		}
 
-		require_once MYBB_ROOT."inc/functions_profilepic.php";
 		$profilepic_error = "";
 
 		if(!empty($mybb->input['remove'])) // remove profile picture
@@ -675,21 +675,9 @@ function profilepic_run()
 			$profilepicmsg = "<br /><strong>".$lang->using_remote_profilepic."</strong>";
 			$profilepicurl = htmlspecialchars_uni($mybb->user['profilepic']);
 		}
-		$urltoprofilepic = htmlspecialchars_uni($mybb->user['profilepic']);
-		if($mybb->user['profilepic'])
-		{
-			$profilepic_dimensions = explode("|", $mybb->user['profilepicdimensions']);
-			if($profilepic_dimensions[0] && $profilepic_dimensions[1])
-			{
-				$profilepic_width_height = "width=\"{$profilepic_dimensions[0]}\" height=\"{$profilepic_dimensions[1]}\"";
-			}
-			eval("\$currentprofilepic = \"".$templates->get("usercp_profilepic_current")."\";");
-			$colspan = 1;
-		}
-		else
-		{
-			$colspan = 2;
-		}
+
+		$userprofilepicture = format_profile_picture(htmlspecialchars_uni($mybb->user['profilepic']), $mybb->user['profilepicdimensions'], '200x200');
+		eval("\$currentprofilepic = \"".$templates->get("usercp_profilepic_current")."\";");
 
 		if($mybb->usergroup['profilepicmaxdimensions'] != "")
 		{
@@ -741,20 +729,14 @@ function profilepic_profile()
 {
 	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepic, $description;
 	$lang->load("profilepic");
+	require_once MYBB_ROOT."inc/functions_profilepic.php";
 
 	$lang->users_profilepic = $lang->sprintf($lang->users_profilepic, $memprofile['username']);
 
-	$profilepic = '';
+	$profilepic = $profilepic_img = '';
 	if($memprofile['profilepic'])
 	{
-		$memprofile['profilepic'] = htmlspecialchars_uni($memprofile['profilepic']);
-		$profilepic_dimensions = explode("|", $memprofile['profilepicdimensions']);
-		if($profilepic_dimensions[0] && $profilepic_dimensions[1])
-		{
-			$profilepic_width_height = "width=\"{$profilepic_dimensions[0]}\" height=\"{$profilepic_dimensions[1]}\"";
-		}
-
-		$profilepic_img = '';
+		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
 		eval("\$profilepic_img = \"".$templates->get("member_profile_profilepic_profilepic")."\";");
 
 		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicdescription'] == 1)
