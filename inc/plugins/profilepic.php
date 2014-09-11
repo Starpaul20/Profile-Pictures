@@ -67,9 +67,12 @@ $plugins->add_hook("admin_user_groups_edit_commit", "profilepic_usergroup_permis
 // The information that shows up on the plugin manager
 function profilepic_info()
 {
+	global $lang;
+	$lang->load("profilepic", true);
+
 	return array(
-		"name"				=> "Profile Picture",
-		"description"		=> "Allows users to upload a picture to display in their profile.",
+		"name"				=> $lang->profilepic_info_name,
+		"description"		=> $lang->profilepic_info_desc,
 		"website"			=> "http://galaxiesrealm.com/index.php",
 		"author"			=> "Starpaul20",
 		"authorsite"		=> "http://galaxiesrealm.com/index.php",

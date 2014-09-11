@@ -4,6 +4,9 @@
  * Copyright 2010 Starpaul20
  */
 
+$l['profilepic_info_name'] = "Profile Picture";
+$l['profilepic_info_desc'] = "Allows users to upload a picture to display in their profile.";
+
 $l['profile_picture'] = "Profile Picture";
 $l['users_profilepic'] = "{1}'s Profile Picture";
 $l['changing_profilepic'] = "<a href=\"usercp.php?action=profilepic\">Changing Profile Picture</a>";
