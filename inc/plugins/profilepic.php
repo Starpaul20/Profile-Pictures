@@ -164,8 +164,15 @@ function profilepic_activate()
 {
 	global $db;
 
-	$query = $db->simple_select("settinggroups", "gid", "name='member'");
-	$gid = $db->fetch_field($query, "gid");
+	// Insert settings
+	$insertarray = array(
+		'name' => 'profilepic',
+		'title' => 'Profile Picture Settings',
+		'description' => 'Various option related to profile pictures can be managed and set here.',
+		'disporder' => 42,
+		'isdefault' => 0,
+	);
+	$gid = $db->insert_query("settinggroups", $insertarray);
 
 	$insertarray = array(
 		'name' => 'profilepicuploadpath',
@@ -173,7 +180,7 @@ function profilepic_activate()
 		'description' => 'This is the path where profile pictures will be uploaded to. This directory <strong>must be chmod 777</strong> (writable) for uploads to work.',
 		'optionscode' => 'text',
 		'value' => './uploads/profilepics',
-		'disporder' => 36,
+		'disporder' => 1,
 		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
@@ -187,7 +194,7 @@ auto=Automatically resize large profile pictures
 user=Give users the choice of resizing large profile pictures
 disabled=Disable this feature',
 		'value' => 'auto',
-		'disporder' => 37,
+		'disporder' => 2,
 		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
@@ -198,7 +205,7 @@ disabled=Disable this feature',
 		'description' => 'If you wish allow your users to enter an optional description for their profile picture, set this option to yes.',
 		'optionscode' => 'yesno',
 		'value' => 1,
-		'disporder' => 38,
+		'disporder' => 3,
 		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
@@ -219,13 +226,14 @@ pg=PG
 r=R
 x=X',
 		'value' => 'g',
-		'disporder' => 38,
+		'disporder' => 4,
 		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
 
 	rebuild_settings();
 
+	// Insert templates
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic',
 		'template'	=> $db->escape_string('<html>
@@ -444,6 +452,7 @@ function profilepic_deactivate()
 {
 	global $db;
 	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating')");
+	$db->delete_query("settinggroups", "name IN('profilepic')");
 	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_auto_resize_auto','usercp_profilepic_auto_resize_user','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','member_profile_profilepic_profilepic','usercp_profilepic_description','usercp_profilepic_remove','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description')");
 	rebuild_settings();
 
