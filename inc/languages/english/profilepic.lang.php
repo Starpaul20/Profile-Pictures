@@ -18,6 +18,8 @@ $l['profile_pic_size_desc'] = "Maximum file size of an uploaded profile picture 
 $l['profile_pic_dims'] = "Maximum Dimensions:";
 $l['profile_pic_dims_desc'] = "Maximum dimensions a profile picture can be, in the format of width<strong>x</strong>height. If this is left blank then there will be no dimension restriction.";
 
+$l['profile_picture_upload_dir'] = "Profile Picture Uploads Directory";
+
 $l['nav_usercp'] = "User Control Panel";
 $l['ucp_nav_change_profilepic'] = "Change Profile Pic";
 $l['change_profilepicture'] = "Change Profile Picture";

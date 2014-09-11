@@ -63,6 +63,7 @@ $plugins->add_hook("modcp_editprofile_start", "profilepic_removal_lang");
 $plugins->add_hook("admin_user_users_delete_commit", "profilepic_user_delete");
 $plugins->add_hook("admin_formcontainer_end", "profilepic_usergroup_permission");
 $plugins->add_hook("admin_user_groups_edit_commit", "profilepic_usergroup_permission_commit");
+$plugins->add_hook("admin_tools_system_health_output_chmod_list", "profilepic_chmod");
 
 // The information that shows up on the plugin manager
 function profilepic_info()
@@ -893,6 +894,28 @@ function profilepic_usergroup_permission_commit()
 	$updated_group['canuploadprofilepic'] = (int)$mybb->input['canuploadprofilepic'];
 	$updated_group['profilepicmaxsize'] = (int)$mybb->input['profilepicmaxsize'];
 	$updated_group['profilepicmaxdimensions'] = $db->escape_string($mybb->input['profilepicmaxdimensions']);
+}
+
+// Check to see if CHMOD for profile pictures is writable
+function profilepic_chmod()
+{
+	global $mybb, $lang, $table, $message_profile_picture;
+	$lang->load("profilepic", true);
+
+	if(is_writable('../'.$mybb->settings['profilepicuploadpath']))
+	{
+		$message_profile_picture = "<span style=\"color: green;\">{$lang->writable}</span>";
+	}
+	else
+	{
+		$message_profile_picture = "<strong><span style=\"color: #C00\">{$lang->not_writable}</span></strong><br />{$lang->please_chmod_777}";
+		++$errors;
+	}
+
+	$table->construct_cell("<strong>{$lang->profile_picture_upload_dir}</strong>");
+	$table->construct_cell($mybb->settings['profilepicuploadpath']);
+	$table->construct_cell($message_profile_picture);
+	$table->construct_row();
 }
 
 ?>
