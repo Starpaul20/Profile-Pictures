@@ -209,6 +209,27 @@ disabled=Disable this feature',
 	);
 	$db->insert_query("settings", $insertarray);
 
+	$insertarray = array(
+		'name' => 'userprofilepicturerating',
+		'title' => 'Gravatar Rating',
+		'description' => 'Allows you to set the maximum rating for Gravatars if a user chooses to use one. If a user profile picture is higher than this rating no profile picture will be used. The ratings are:
+<ul>
+<li><strong>G</strong>: suitable for display on all websites with any audience type</li>
+<li><strong>PG</strong>: may contain rude gestures, provocatively dressed individuals, the lesser swear words or mild violence</li>
+<li><strong>R</strong>: may contain such things as harsh profanity, intense violence, nudity or hard drug use</li>
+<li><strong>X</strong>: may contain hardcore sexual imagery or extremely disturbing violence</li>
+</ul>',
+		'optionscode' => 'select
+g=G
+pg=PG
+r=R
+x=X',
+		'value' => 'g',
+		'disporder' => 38,
+		'gid' => intval($gid)
+	);
+	$db->insert_query("settings", $insertarray);
+
 	rebuild_settings();
 
 	$insert_array = array(
@@ -245,8 +266,14 @@ disabled=Disable this feature',
 <input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
 {$profilepicupload}
 <tr>
-<td class="trow2" width="40%"><strong>{$lang->profilepic_url}</strong></td>
-<td class="trow2" width="60%"><input type="text" class="textbox" name="profilepicurl" size="45" value="{$profilepicurl}" /></td>
+	<td class="trow2" width="40%">
+		<strong>{$lang->profilepic_url}</strong>
+		<br /><span class="smalltext">{$lang->profilepic_url_note}</span>
+	</td>
+	<td class="trow2" width="60%">
+		<input type="text" class="textbox" name="profilepicurl" size="45" value="{$profilepicurl}" />
+		<br /><span class="smalltext">{$lang->profilepic_url_gravatar}</span>
+	</td>
 </tr>
 {$profilepicdescription}
 </table>
@@ -376,7 +403,7 @@ disabled=Disable this feature',
 function profilepic_deactivate()
 {
 	global $db;
-	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription')");
+	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating')");
 	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description')");
 	rebuild_settings();
 
@@ -464,69 +491,111 @@ function profilepic_run()
 		}
 		elseif($mybb->input['profilepicurl']) // remote profile picture
 		{
-			$mybb->input['profilepicurl'] = preg_replace("#script:#i", "", $mybb->input['profilepicurl']);
-			$ext = get_extension($mybb->input['profilepicurl']);
-
-			// Copy the profile picture to the local server (work around remote URL access disabled for getimagesize)
-			$file = fetch_remote_file($mybb->input['profilepicurl']);
-			if(!$file)
+			$mybb->input['profilepicurl'] = trim($mybb->get_input('profilepicurl'));
+			if(validate_email_format($mybb->input['profilepicurl']) != false)
 			{
-				$profilepic_error = $lang->error_invalidprofilepicurl;
+				// Gravatar
+				$mybb->input['profilepicurl'] = my_strtolower($mybb->input['profilepicurl']);
+
+				// If user image does not exist, or is a higher rating, use the mystery man
+				$email = md5($mybb->input['profilepicurl']);
+
+				$s = '';
+				if(!$mybb->usergroup['profilepicmaxdimensions'])
+				{
+					$mybb->usergroup['profilepicmaxdimensions'] = '200x200'; // Hard limit of 200 if there are no limits
+				}
+
+				// Because Gravatars are square, hijack the width
+				list($maxwidth, $maxheight) = explode("x", my_strtolower($mybb->usergroup['profilepicmaxdimensions']));
+				$maxheight = (int)$maxwidth;
+
+				// Rating?
+				$types = array('g', 'pg', 'r', 'x');
+				$rating = $mybb->settings['userprofilepicturerating'];
+
+				if(!in_array($rating, $types))
+				{
+					$rating = 'g';
+				}
+
+				$s = "?s={$maxheight}&r={$rating}&d=mm";
+
+				$updated_avatar = array(
+					"profilepic" => "http://www.gravatar.com/avatar/{$email}{$s}.jpg",
+					"profilepicdimensions" => "{$maxheight}|{$maxheight}",
+					"profilepictype" => "gravatar",
+					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
+				);
+
+				$db->update_query("users", $updated_avatar, "uid = '{$mybb->user['uid']}'");
 			}
 			else
 			{
-				$tmp_name = $mybb->settings['profilepicuploadpath']."/remote_".md5(uniqid(rand(), true));
-				$fp = @fopen($tmp_name, "wb");
-				if(!$fp)
+				$mybb->input['profilepicurl'] = preg_replace("#script:#i", "", $mybb->input['profilepicurl']);
+				$ext = get_extension($mybb->input['profilepicurl']);
+
+				// Copy the profile picture to the local server (work around remote URL access disabled for getimagesize)
+				$file = fetch_remote_file($mybb->input['profilepicurl']);
+				if(!$file)
 				{
 					$profilepic_error = $lang->error_invalidprofilepicurl;
 				}
 				else
 				{
-					fwrite($fp, $file);
-					fclose($fp);
-					list($width, $height, $type) = @getimagesize($tmp_name);
-					@unlink($tmp_name);
-					if(!$type)
+					$tmp_name = $mybb->settings['profilepicuploadpath']."/remote_".md5(uniqid(rand(), true));
+					$fp = @fopen($tmp_name, "wb");
+					if(!$fp)
 					{
 						$profilepic_error = $lang->error_invalidprofilepicurl;
 					}
-				}
-			}
-
-			// See if profile picture description is too long
-			if(my_strlen($mybb->input['profilepicdescription']) > 255)
-			{
-				$profilepic_error = $lang->error_descriptiontoobig;
-			}
-
-			if(empty($profilepic_error))
-			{
-				if($width && $height && $mybb->usergroup['profilepicmaxdimensions'] != "")
-				{
-					list($maxwidth, $maxheight) = explode("x", my_strtolower($mybb->usergroup['profilepicmaxdimensions']));
-					if(($maxwidth && $width > $maxwidth) || ($maxheight && $height > $maxheight))
+					else
 					{
-						$lang->error_profilepictoobig = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
-						$profilepic_error = $lang->error_profilepictoobig;
+						fwrite($fp, $file);
+						fclose($fp);
+						list($width, $height, $type) = @getimagesize($tmp_name);
+						@unlink($tmp_name);
+						if(!$type)
+						{
+							$profilepic_error = $lang->error_invalidprofilepicurl;
+						}
 					}
 				}
-			}
 
-			if(empty($profilepic_error))
-			{
-				if($width > 0 && $height > 0)
+				// See if profile picture description is too long
+				if(my_strlen($mybb->input['profilepicdescription']) > 255)
 				{
-					$profilepic_dimensions = intval($width)."|".intval($height);
+					$profilepic_error = $lang->error_descriptiontoobig;
 				}
-				$updated_profilepic = array(
-					"profilepic" => $db->escape_string($mybb->input['profilepicurl'].'?dateline='.TIME_NOW),
-					"profilepicdimensions" => $profilepic_dimensions,
-					"profilepictype" => "remote",
-					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
-				);
-				$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
-				remove_profilepic($mybb->user['uid']);
+
+				if(empty($profilepic_error))
+				{
+					if($width && $height && $mybb->usergroup['profilepicmaxdimensions'] != "")
+					{
+						list($maxwidth, $maxheight) = explode("x", my_strtolower($mybb->usergroup['profilepicmaxdimensions']));
+						if(($maxwidth && $width > $maxwidth) || ($maxheight && $height > $maxheight))
+						{
+							$lang->error_profilepictoobig = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
+							$profilepic_error = $lang->error_profilepictoobig;
+						}
+					}
+				}
+
+				if(empty($profilepic_error))
+				{
+					if($width > 0 && $height > 0)
+					{
+						$profilepic_dimensions = intval($width)."|".intval($height);
+					}
+					$updated_profilepic = array(
+						"profilepic" => $db->escape_string($mybb->input['profilepicurl'].'?dateline='.TIME_NOW),
+						"profilepicdimensions" => $profilepic_dimensions,
+						"profilepictype" => "remote",
+						"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
+					);
+					$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
+					remove_profilepic($mybb->user['uid']);
+				}
 			}
 		}
 		else // just updating profile picture description

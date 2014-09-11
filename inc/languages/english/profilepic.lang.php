@@ -24,6 +24,8 @@ $l['change_profilepicture'] = "Change Profile Picture";
 $l['change_picture'] = "Change Picture";
 $l['remove_picture'] = "Remove Picture";
 $l['profilepic_url'] = "Profile Picture URL:";
+$l['profilepic_url_note'] = "Enter the URL of a profile picture on the internet.";
+$l['profilepic_url_gravatar'] = "To use a <a href=\"http://gravatar.com\" target=\"_blank\">Gravatar</a> enter your Gravatar email.";
 $l['profilepic_description'] = "Profile Picture Description:";
 $l['profilepic_upload'] = "Upload Profile Picture:";
 $l['profilepic_note'] = "A profile picture is a small identifying image shown in a user's profile.";

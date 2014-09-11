@@ -1,5 +1,6 @@
 1.0 (September 11th, 2014)
 - Updated plugin to work with MyBB 1.8
+- Added Gravatar support
 
 ## Version number reset for MyBB 1.8 ##
 
