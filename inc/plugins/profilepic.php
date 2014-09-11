@@ -18,7 +18,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'usercp.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'usercp_profilepic,usercp_profilepic_auto_resize_auto,usercp_profilepic_auto_resize_user,usercp_profilepic_current,usercp_profilepic_description,usercp_profilepic_upload,usercp_nav_profilepic';
+	$templatelist .= 'usercp_profilepic,usercp_profilepic_auto_resize_auto,usercp_profilepic_auto_resize_user,usercp_profilepic_current,usercp_profilepic_description,usercp_profilepic_remove,usercp_profilepic_upload,usercp_nav_profilepic';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
@@ -283,7 +283,7 @@ x=X',
 		<div align="center">
 			<input type="hidden" name="action" value="do_profilepic" />
 			<input type="submit" class="button" name="submit" value="{$lang->change_picture}" />
-			<input type="submit" class="button" name="remove" value="{$lang->remove_picture}" />
+			{$removeprofilepicture}
 		</div>
 	</td>
 </tr>
@@ -319,6 +319,15 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic_current',
 		'template'	=> $db->escape_string('<td width="150" align="right"><img src="{$userprofilepicture[\'image\']}" alt="{$lang->profile_picture_mine}" title="{$lang->profile_picture_mine}" {$userprofilepicture[\'width_height\']} /></td>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
+		'title'		=> 'usercp_profilepic_remove',
+		'template'	=> $db->escape_string('<input type="submit" class="button" name="remove" value="{$lang->remove_picture}" />'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -433,7 +442,7 @@ function profilepic_deactivate()
 {
 	global $db;
 	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating')");
-	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_auto_resize_auto','usercp_profilepic_auto_resize_user','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','member_profile_profilepic_profilepic','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description')");
+	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_auto_resize_auto','usercp_profilepic_auto_resize_user','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','member_profile_profilepic_profilepic','usercp_profilepic_description','usercp_profilepic_remove','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description')");
 	rebuild_settings();
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
@@ -714,6 +723,12 @@ function profilepic_run()
 		if($mybb->settings['profilepicdescription'] == 1)
 		{
 			eval("\$profilepicdescription = \"".$templates->get("usercp_profilepic_description")."\";");
+		}
+
+		$removeprofilepicture = '';
+		if(!empty($mybb->user['profilepic']))
+		{
+			eval("\$removeprofilepicture = \"".$templates->get("usercp_profilepic_remove")."\";");
 		}
 
 		if(!isset($profilepic_error))
