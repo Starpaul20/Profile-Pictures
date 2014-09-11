@@ -334,7 +334,7 @@ disabled=Disable this feature',
 
 	$insert_array = array(
 		'title'		=> 'usercp_nav_profilepic',
-		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/usercp/profilepic.gif\') no-repeat left center;">{$lang->ucp_nav_change_profilepic}</a></div>'),
+		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepic.png\') no-repeat left center;">{$lang->ucp_nav_change_profilepic}</a></div>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
