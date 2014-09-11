@@ -655,7 +655,7 @@ function profilepic_run()
 
 		if(empty($profilepic_error))
 		{
-			redirect("usercp.php", $lang->redirect_profilepicupdated);
+			redirect("usercp.php?action=profilepic", $lang->redirect_profilepicupdated);
 		}
 		else
 		{
