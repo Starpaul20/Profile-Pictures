@@ -171,7 +171,7 @@ function profilepic_activate()
 	}
 
 	$query = $db->simple_select("settinggroups", "gid", "name='member'");
-	$gid = intval($db->fetch_field($query, "gid"));
+	$gid = $db->fetch_field($query, "gid");
 
 	$insertarray = array(
 		'name' => 'profilepicuploadpath',
@@ -180,7 +180,7 @@ function profilepic_activate()
 		'optionscode' => 'text',
 		'value' => './uploads/profilepics',
 		'disporder' => 36,
-		'gid' => $gid
+		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
 
@@ -194,7 +194,7 @@ user=Give users the choice of resizing large profile pictures
 disabled=Disable this feature',
 		'value' => 'auto',
 		'disporder' => 37,
-		'gid' => $gid
+		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
 
@@ -205,7 +205,7 @@ disabled=Disable this feature',
 		'optionscode' => 'yesno',
 		'value' => 1,
 		'disporder' => 38,
-		'gid' => intval($gid)
+		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
 
@@ -226,7 +226,7 @@ r=R
 x=X',
 		'value' => 'g',
 		'disporder' => 38,
-		'gid' => intval($gid)
+		'gid' => (int)$gid
 	);
 	$db->insert_query("settings", $insertarray);
 
@@ -435,7 +435,7 @@ function profilepic_run()
 	if($mybb->input['action'] == "do_profilepic" && $mybb->request_method == "post")
 	{
 		// Verify incoming POST request
-		verify_post_check($mybb->input['my_post_key']);
+		verify_post_check($mybb->get_input('my_post_key'));
 
 		if($mybb->usergroup['canuseprofilepic'] == 0)
 		{
@@ -445,7 +445,7 @@ function profilepic_run()
 		require_once MYBB_ROOT."inc/functions_profilepic.php";
 		$profilepic_error = "";
 
-		if($mybb->input['remove']) // remove profile picture
+		if(!empty($mybb->input['remove'])) // remove profile picture
 		{
 			$updated_profilepic = array(
 				"profilepic" => "",
@@ -585,7 +585,7 @@ function profilepic_run()
 				{
 					if($width > 0 && $height > 0)
 					{
-						$profilepic_dimensions = intval($width)."|".intval($height);
+						$profilepic_dimensions = (int)$width."|".(int)$height;
 					}
 					$updated_profilepic = array(
 						"profilepic" => $db->escape_string($mybb->input['profilepicurl'].'?dateline='.TIME_NOW),
@@ -637,6 +637,8 @@ function profilepic_run()
 			error_no_permission();
 		}
 
+		$profilepicmsg = $profilepicurl = '';
+
 		if($mybb->user['profilepictype'] == "upload" || stristr($mybb->user['profilepic'], $mybb->settings['profilepicuploadpath']))
 		{
 			$profilepicmsg = "<br /><strong>".$lang->already_uploaded_profilepic."</strong>";
@@ -672,6 +674,8 @@ function profilepic_run()
 			$maxsize = get_friendly_size($mybb->usergroup['profilepicmaxsize']*1024);
 			$lang->profilepic_note .= "<br />".$lang->sprintf($lang->profilepic_note_size, $maxsize);
 		}
+
+		$auto_resize = '';
 		if($mybb->settings['profilepicresizing'] == "auto")
 		{
 			$auto_resize = "<br /><span class=\"smalltext\">{$lang->profilepic_auto_resize_note}</span>\n";
@@ -680,6 +684,8 @@ function profilepic_run()
 		{
 			$auto_resize = "<br /><span class=\"smalltext\"><input type=\"checkbox\" name=\"auto_resize\" value=\"1\" checked=\"checked\" id=\"auto_resize\" /> <label for=\"auto_resize\">{$lang->profilepic_auto_resize_option}</label></span>";
 		}
+
+		$profilepicupload = '';
 		if($mybb->usergroup['canuploadprofilepic'] == 1)
 		{
 			eval("\$profilepicupload = \"".$templates->get("usercp_profilepic_upload")."\";");
@@ -687,9 +693,15 @@ function profilepic_run()
 
 		$description = htmlspecialchars_uni($mybb->user['profilepicdescription']);
 
+		$profilepicdescription = '';
 		if($mybb->settings['profilepicdescription'] == 1)
 		{
 			eval("\$profilepicdescription = \"".$templates->get("usercp_profilepic_description")."\";");
+		}
+
+		if(!isset($profilepic_error))
+		{
+			$profilepic_error = '';
 		}
 
 		eval("\$profilepicture = \"".$templates->get("usercp_profilepic")."\";");
@@ -705,6 +717,7 @@ function profilepic_profile()
 
 	$lang->users_profilepic = $lang->sprintf($lang->users_profilepic, $memprofile['username']);
 
+	$profilepic = '';
 	if($memprofile['profilepic'])
 	{
 		$memprofile['profilepic'] = htmlspecialchars_uni($memprofile['profilepic']);
@@ -827,9 +840,9 @@ function profilepic_usergroup_permission()
 function profilepic_usergroup_permission_commit()
 {
 	global $db, $mybb, $updated_group;
-	$updated_group['canuseprofilepic'] = intval($mybb->input['canuseprofilepic']);
-	$updated_group['canuploadprofilepic'] = intval($mybb->input['canuploadprofilepic']);
-	$updated_group['profilepicmaxsize'] = intval($mybb->input['profilepicmaxsize']);
+	$updated_group['canuseprofilepic'] = (int)$mybb->input['canuseprofilepic'];
+	$updated_group['canuploadprofilepic'] = (int)$mybb->input['canuploadprofilepic'];
+	$updated_group['profilepicmaxsize'] = (int)$mybb->input['profilepicmaxsize'];
 	$updated_group['profilepicmaxdimensions'] = $db->escape_string($mybb->input['profilepicmaxdimensions']);
 }
 
