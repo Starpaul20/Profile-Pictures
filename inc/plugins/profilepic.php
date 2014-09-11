@@ -18,7 +18,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'usercp.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'usercp_profilepic,usercp_profilepic_current,usercp_profilepic_description,usercp_profilepic_upload,usercp_nav_profilepic';
+	$templatelist .= 'usercp_profilepic,usercp_profilepic_auto_resize_auto,usercp_profilepic_auto_resize_user,usercp_profilepic_current,usercp_profilepic_description,usercp_profilepic_upload,usercp_nav_profilepic';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
@@ -38,7 +38,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'member_profile_profilepic,member_profile_profilepic_description';
+	$templatelist .= 'member_profile_profilepic,member_profile_profilepic_description,member_profile_profilepic_profilepic';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'modcp.php'))
@@ -297,6 +297,24 @@ x=X',
 	$db->insert_query("templates", $insert_array);
 
 	$insert_array = array(
+		'title'		=> 'usercp_profilepic_auto_resize_auto',
+		'template'	=> $db->escape_string('<br /><span class="smalltext">{$lang->profilepic_auto_resize_note}</span>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
+		'title'		=> 'usercp_profilepic_auto_resize_user',
+		'template'	=> $db->escape_string('<br /><span class="smalltext"><input type="checkbox" name="auto_resize" value="1" checked="checked" id="auto_resize" /> <label for="auto_resize">{$lang->profilepic_auto_resize_option}</label></span>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
 		'title'		=> 'usercp_profilepic_current',
 		'template'	=> $db->escape_string('<td class="trow1" width="150" align="right"><img src="{$urltoprofilepic}" alt="{$lang->profile_picture}" title="{$lang->profile_picture}" {$profilepic_width_height} /></td>'),
 		'sid'		=> '-1',
@@ -307,8 +325,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'member_profile_profilepic',
-		'template'	=> $db->escape_string('<br />
-<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
+		'template'	=> $db->escape_string('<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
 <tr>
 <td class="thead"><strong>{$lang->users_profilepic}</strong></td>
 </tr>
@@ -316,7 +333,8 @@ x=X',
 <td class="trow1" align="center">{$profilepic_img}<br />
 {$description}</td>
 </tr>
-</table>'),
+</table>
+<br />'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -326,6 +344,15 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'member_profile_profilepic_description',
 		'template'	=> $db->escape_string('<span class="smalltext"><em>{$memprofile[\'profilepicdescription\']}</em></span>'),
+		'sid'		=> '-1',
+		'version'	=> '',
+		'dateline'	=> TIME_NOW
+	);
+	$db->insert_query("templates", $insert_array);
+
+	$insert_array = array(
+		'title'		=> 'member_profile_profilepic_profilepic',
+		'template'	=> $db->escape_string('<img src="{$memprofile[\'profilepic\']}" alt="" {$profilepic_width_height} />'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -404,7 +431,7 @@ function profilepic_deactivate()
 {
 	global $db;
 	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating')");
-	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description')");
+	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_auto_resize_auto','usercp_profilepic_auto_resize_user','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','member_profile_profilepic_profilepic','usercp_profilepic_description','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description')");
 	rebuild_settings();
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
@@ -678,11 +705,11 @@ function profilepic_run()
 		$auto_resize = '';
 		if($mybb->settings['profilepicresizing'] == "auto")
 		{
-			$auto_resize = "<br /><span class=\"smalltext\">{$lang->profilepic_auto_resize_note}</span>\n";
+			eval("\$auto_resize = \"".$templates->get("usercp_profilepic_auto_resize_auto")."\";");
 		}
 		else if($mybb->settings['profilepicresizing'] == "user")
 		{
-			$auto_resize = "<br /><span class=\"smalltext\"><input type=\"checkbox\" name=\"auto_resize\" value=\"1\" checked=\"checked\" id=\"auto_resize\" /> <label for=\"auto_resize\">{$lang->profilepic_auto_resize_option}</label></span>";
+			eval("\$auto_resize = \"".$templates->get("usercp_profilepic_auto_resize_user")."\";");
 		}
 
 		$profilepicupload = '';
@@ -726,7 +753,9 @@ function profilepic_profile()
 		{
 			$profilepic_width_height = "width=\"{$profilepic_dimensions[0]}\" height=\"{$profilepic_dimensions[1]}\"";
 		}
-		$profilepic_img = "<img src=\"{$memprofile['profilepic']}\" alt=\"\" {$profilepic_width_height} />";
+
+		$profilepic_img = '';
+		eval("\$profilepic_img = \"".$templates->get("member_profile_profilepic_profilepic")."\";");
 
 		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicdescription'] == 1)
 		{
