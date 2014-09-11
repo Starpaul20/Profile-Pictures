@@ -570,6 +570,12 @@ function profilepic_run()
 
 				$s = "?s={$maxheight}&r={$rating}&d=mm";
 
+				// See if profile picture description is too long
+				if(my_strlen($mybb->input['profilepicdescription']) > 255)
+				{
+					$profilepic_error = $lang->error_descriptiontoobig;
+				}
+
 				$updated_avatar = array(
 					"profilepic" => "http://www.gravatar.com/avatar/{$email}{$s}.jpg",
 					"profilepicdimensions" => "{$maxheight}|{$maxheight}",
@@ -698,8 +704,11 @@ function profilepic_run()
 			$profilepicurl = htmlspecialchars_uni($mybb->user['profilepic']);
 		}
 
-		$userprofilepicture = format_profile_picture(htmlspecialchars_uni($mybb->user['profilepic']), $mybb->user['profilepicdimensions'], '200x200');
-		eval("\$currentprofilepic = \"".$templates->get("usercp_profilepic_current")."\";");
+		if(!empty($mybb->user['profilepic']))
+		{
+			$userprofilepicture = format_profile_picture(htmlspecialchars_uni($mybb->user['profilepic']), $mybb->user['profilepicdimensions'], '200x200');
+			eval("\$currentprofilepic = \"".$templates->get("usercp_profilepic_current")."\";");
+		}
 
 		if($mybb->usergroup['profilepicmaxdimensions'] != "")
 		{
