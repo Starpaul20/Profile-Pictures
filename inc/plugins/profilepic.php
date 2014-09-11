@@ -373,8 +373,13 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic_description',
 		'template'	=> $db->escape_string('<tr>
-<td class="trow1" width="40%"><strong>{$lang->profilepic_description}</strong></td>
-<td class="trow1" width="60%"><input type="text" class="textbox" name="profilepicdescription" size="100" value="{$description}" /></td>
+	<td class="trow1" width="40%">
+		<strong>{$lang->profilepic_description}</strong>
+		<br /><span class="smalltext">{$lang->profilepic_description_note}</span>
+	</td>
+	<td class="trow1" width="60%">
+		<input type="text" class="textbox" name="profilepicdescription" size="100" value="{$description}" />
+	</td>
 </tr>'),
 		'sid'		=> '-1',
 		'version'	=> '',
@@ -385,11 +390,14 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic_upload',
 		'template'	=> $db->escape_string('<tr>
-<td class="trow1" width="40%"><strong>{$lang->profilepic_upload}</strong></td>
-<td class="trow1" width="60%">
-<input type="file" name="profilepicupload" size="25" class="fileupload" />
-{$auto_resize}
-</td>
+	<td class="trow1" width="40%">
+		<strong>{$lang->profilepic_upload}</strong>
+		<br /><span class="smalltext">{$lang->profilepic_upload_note}</span>
+	</td>
+	<td class="trow1" width="60%">
+		<input type="file" name="profilepicupload" size="25" class="fileupload" />
+		{$auto_resize}
+	</td>
 </tr>'),
 		'sid'		=> '-1',
 		'version'	=> '',
