@@ -441,7 +441,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'usercp_nav_profilepic',
-		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepic.png\') no-repeat left center;">{$lang->ucp_nav_change_profilepic}</a></div>'),
+		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepic.png\') no-repeat left center;">{$lang->ucp_nav_change_profilepicture}</a></div>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -497,7 +497,7 @@ function profilepic_deactivate()
 // User CP Nav link
 function profilepic_nav()
 {
-	global $db, $mybb, $lang, $templates, $usercpnav;
+	global $mybb, $lang, $templates, $usercpnav;
 	$lang->load("profilepic");
 
 	if($mybb->usergroup['canuseprofilepic'] == 1)
@@ -833,7 +833,7 @@ function profilepic_online_activity($user_activity)
 
 function profilepic_online_location($plugin_array)
 {
-	global $db, $mybb, $lang, $parameters;
+	global $lang;
 	$lang->load("profilepic");
 
 	if($plugin_array['user_activity']['activity'] == "usercp_profilepic")

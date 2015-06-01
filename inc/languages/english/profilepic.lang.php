@@ -21,7 +21,7 @@ $l['profile_pic_dims_desc'] = "Maximum dimensions a profile picture can be, in t
 $l['profile_picture_upload_dir'] = "Profile Picture Uploads Directory";
 
 $l['nav_usercp'] = "User Control Panel";
-$l['ucp_nav_change_profilepic'] = "Change Profile Pic";
+$l['ucp_nav_change_profilepicture'] = "Change Profile Picture";
 $l['change_profilepicture'] = "Change Profile Picture";
 $l['change_picture'] = "Change Picture";
 $l['remove_picture'] = "Remove Picture";
