@@ -5,32 +5,33 @@
  */
 
 /**
- * Remove any matching profile pic for a specific user ID
+ * Remove any matching profile picture for a specific user ID
  *
  * @param int The user ID
  * @param string A file name to be excluded from the removal
  */
-function remove_profilepic($uid, $exclude="")
+function remove_profilepicture($uid, $exclude="")
 {
 	global $mybb;
 
 	if(defined('IN_ADMINCP'))
 	{
-		$profilepicpath = '../'.$mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = '../'.$mybb->settings['profilepicuploadpath'];
 	}
 	else
 	{
-		$profilepicpath = $mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = $mybb->settings['profilepicuploadpath'];
 	}
 
-	$dir = opendir($profilepicpath);
+	$dir = opendir($profilepicturepath);
 	if($dir)
 	{
 		while($file = @readdir($dir))
 		{
-			if(preg_match("#profilepic_".$uid."\.#", $file) && is_file($profilepicpath."/".$file) && $file != $exclude)
+			if(preg_match("#profilepic_".$uid."\.#", $file) && is_file($profilepicturepath."/".$file) && $file != $exclude)
 			{
-				@unlink($profilepicpath."/".$file);
+				require_once MYBB_ROOT."inc/functions_upload.php";
+				delete_uploaded_file($profilepicturepath."/".$file);
 			}
 		}
 
@@ -39,72 +40,75 @@ function remove_profilepic($uid, $exclude="")
 }
 
 /**
- * Upload a new profile pic in to the file system
+ * Upload a new profile picture in to the file system
  *
- * @param srray incoming FILE array, if we have one - otherwise takes $_FILES['profilepicupload']
- * @param string User ID this profile pic is being uploaded for, if not the current user
+ * @param srray incoming FILE array, if we have one - otherwise takes $_FILES['profilepictureupload']
+ * @param string User ID this profile picture is being uploaded for, if not the current user
  * @return array Array of errors if any, otherwise filename of successful.
  */
-function upload_profilepic($profilepic=array(), $uid=0)
+function upload_profilepicture($profilepicture=array(), $uid=0)
 {
 	global $db, $mybb, $lang;
+
+	$ret = array();
+	require_once MYBB_ROOT."inc/functions_upload.php";
 
 	if(!$uid)
 	{
 		$uid = $mybb->user['uid'];
 	}
 
-	if(!$profilepic['name'] || !$profilepic['tmp_name'])
+	if(!$profilepicture['name'] || !$profilepicture['tmp_name'])
 	{
-		$profilepic = $_FILES['profilepicupload'];
+		$profilepicture = $_FILES['profilepictureupload'];
 	}
 
-	if(!is_uploaded_file($profilepic['tmp_name']))
+	if(!is_uploaded_file($profilepicture['tmp_name']))
 	{
 		$ret['error'] = $lang->error_uploadfailed;
 		return $ret;
 	}
 
 	// Check we have a valid extension
-	$ext = get_extension(my_strtolower($profilepic['name']));
-	if(!preg_match("#^(gif|jpg|jpeg|jpe|bmp|png)$#i", $ext)) 
+	$ext = get_extension(my_strtolower($profilepicture['name']));
+	if(!preg_match("#^(gif|jpg|jpeg|jpe|bmp|png)$#i", $ext))
 	{
-		$ret['error'] = $lang->error_profilepictype;
+		$ret['error'] = $lang->error_profilepicturetype;
 		return $ret;
 	}
 
 	if(defined('IN_ADMINCP'))
 	{
-		$profilepicpath = '../'.$mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = '../'.$mybb->settings['profilepicuploadpath'];
 		$lang->load("messages", true);
 	}
 	else
 	{
-		$profilepicpath = $mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = $mybb->settings['profilepicuploadpath'];
 	}
 
 	$filename = "profilepic_".$uid.".".$ext;
-	$file = upload_profilepicfile($profilepic, $profilepicpath, $filename);
+	$file = upload_file($profilepicture, $profilepicturepath, $filename);
 	if($file['error'])
 	{
-		@unlink($profilepicpath."/".$filename);		
+		delete_uploaded_file($profilepicturepath."/".$filename);
 		$ret['error'] = $lang->error_uploadfailed;
 		return $ret;
-	}	
+	}
 
 	// Lets just double check that it exists
-	if(!file_exists($profilepicpath."/".$filename))
+	if(!file_exists($profilepicturepath."/".$filename))
 	{
 		$ret['error'] = $lang->error_uploadfailed;
-		@unlink($profilepicpath."/".$filename);
+		delete_uploaded_file($profilepicturepath."/".$filename);
 		return $ret;
 	}
 
 	// Check if this is a valid image or not
-	$img_dimensions = @getimagesize($profilepicpath."/".$filename);
+	$img_dimensions = @getimagesize($profilepicturepath."/".$filename);
 	if(!is_array($img_dimensions))
 	{
-		@unlink($profilepicpath."/".$filename);
+		delete_uploaded_file($profilepicturepath."/".$filename);
 		$ret['error'] = $lang->error_uploadfailed;
 		return $ret;
 	}
@@ -119,45 +123,47 @@ function upload_profilepic($profilepic=array(), $uid=0)
 			if($mybb->settings['profilepicresizing'] == "auto" || ($mybb->settings['profilepicresizing'] == "user" && $mybb->input['auto_resize'] == 1))
 			{
 				require_once MYBB_ROOT."inc/functions_image.php";
-				$thumbnail = generate_thumbnail($profilepicpath."/".$filename, $profilepicpath, $filename, $maxheight, $maxwidth);
+				$thumbnail = generate_thumbnail($profilepicturepath."/".$filename, $profilepicturepath, $filename, $maxheight, $maxwidth);
 				if(!$thumbnail['filename'])
 				{
-					$ret['error'] = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
-					$ret['error'] .= "<br /><br />".$lang->error_profilepicresizefailed;
-					@unlink($profilepicpath."/".$filename);
-					return $ret;				
+					$ret['error'] = $lang->sprintf($lang->error_profilepicturetoobig, $maxwidth, $maxheight);
+					$ret['error'] .= "<br /><br />".$lang->error_profilepictureresizefailed;
+					delete_uploaded_file($profilepicturepath."/".$filename);
+					return $ret;
 				}
 				else
 				{
+					// Copy scaled image to CDN
+					copy_file_to_cdn($profilepicturepath . '/' . $thumbnail['filename']);
 					// Reset filesize
-					$profilepic['size'] = filesize($profilepicpath."/".$filename);
+					$profilepicture['size'] = filesize($profilepicturepath."/".$filename);
 					// Reset dimensions
-					$img_dimensions = @getimagesize($profilepicpath."/".$filename);
+					$img_dimensions = @getimagesize($profilepicturepath."/".$filename);
 				}
 			}
 			else
 			{
-				$ret['error'] = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
+				$ret['error'] = $lang->sprintf($lang->error_profilepicturetoobig, $maxwidth, $maxheight);
 				if($mybb->settings['profilepicresizing'] == "user")
 				{
-					$ret['error'] .= "<br /><br />".$lang->error_profilepicuserresize;
+					$ret['error'] .= "<br /><br />".$lang->error_profilepictureuserresize;
 				}
-				@unlink($profilepicpath."/".$filename);
+				delete_uploaded_file($profilepicturepath."/".$filename);
 				return $ret;
-			}			
+			}
 		}
 	}
 
 	// Next check the file size
-	if($profilepic['size'] > ($mybb->usergroup['profilepicmaxsize']*1024) && $mybb->usergroup['profilepicmaxsize'] > 0)
+	if($profilepicture['size'] > ($mybb->usergroup['profilepicmaxsize']*1024) && $mybb->usergroup['profilepicmaxsize'] > 0)
 	{
-		@unlink($profilepicpath."/".$filename);
+		delete_uploaded_file($profilepicturepath."/".$filename);
 		$ret['error'] = $lang->error_uploadsize;
 		return $ret;
-	}	
+	}
 
 	// Check a list of known MIME types to establish what kind of profile picture we're uploading
-	switch(my_strtolower($profilepic['type']))
+	switch(my_strtolower($profilepicture['type']))
 	{
 		case "image/gif":
 			$img_type =  1;
@@ -181,55 +187,19 @@ function upload_profilepic($profilepic=array(), $uid=0)
 	if($img_dimensions[2] != $img_type || $img_type == 0)
 	{
 		$ret['error'] = $lang->error_uploadfailed;
-		@unlink($profilepicpath."/".$filename);
-		return $ret;		
+		delete_uploaded_file($profilepicturepath."/".$filename);
+		return $ret;
 	}
-	// Everything is okay so lets delete old profile picture for this user
-	remove_profilepic($uid, $filename);
+	// Everything is okay so lets delete old profile pictures for this user
+	remove_profilepicture($uid, $filename);
 
 	$ret = array(
 		"profilepic" => $mybb->settings['profilepicuploadpath']."/".$filename,
-		"width" => intval($img_dimensions[0]),
-		"height" => intval($img_dimensions[1])
+		"width" => (int)$img_dimensions[0],
+		"height" => (int)$img_dimensions[1]
 	);
+
 	return $ret;
-}
-
-/**
- * Actually move a file to the uploads directory
- *
- * @param array The PHP $_FILE array for the file
- * @param string The path to save the file in
- * @param string The filename for the file (if blank, current is used)
- */
-function upload_profilepicfile($file, $path, $filename="")
-{
-	if(empty($file['name']) || $file['name'] == "none" || $file['size'] < 1)
-	{
-		$upload['error'] = 1;
-		return $upload;
-	}
-
-	if(!$filename)
-	{
-		$filename = $file['name'];
-	}
-
-	$upload['original_filename'] = preg_replace("#/$#", "", $file['name']); // Make the filename safe
-	$filename = preg_replace("#/$#", "", $filename); // Make the filename safe
-	$moved = @move_uploaded_file($file['tmp_name'], $path."/".$filename);
-
-	if(!$moved)
-	{
-		$upload['error'] = 2;
-		return $upload;
-	}
-	@my_chmod($path."/".$filename, '0644');
-	$upload['filename'] = $filename;
-	$upload['path'] = $path;
-	$upload['type'] = $file['type'];
-	$upload['size'] = $file['size'];
-	return $upload;
 }
 
 /**

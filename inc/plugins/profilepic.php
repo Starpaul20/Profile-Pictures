@@ -429,7 +429,7 @@ x=X',
 		<br /><span class="smalltext">{$lang->profilepic_upload_note}</span>
 	</td>
 	<td class="trow1" width="60%">
-		<input type="file" name="profilepicupload" size="25" class="fileupload" />
+		<input type="file" name="profilepictureupload" size="25" class="fileupload" />
 		{$auto_resize}
 	</td>
 </tr>'),
@@ -535,9 +535,9 @@ function profilepic_run()
 				"profilepicdescription" => ""
 			);
 			$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
-			remove_profilepic($mybb->user['uid']);
+			remove_profilepicture($mybb->user['uid']);
 		}
-		elseif($_FILES['profilepicupload']['name']) // upload profile picture
+		elseif($_FILES['profilepictureupload']['name']) // upload profile picture
 		{
 			if($mybb->usergroup['canuploadprofilepic'] == 0)
 			{
@@ -550,19 +550,19 @@ function profilepic_run()
 				$profilepic_error = $lang->error_descriptiontoobig;
 			}
 
-			$profilepic = upload_profilepic();
-			if($profilepic['error'])
+			$profilepicture = upload_profilepicture();
+			if($profilepicture['error'])
 			{
-				$profilepic_error = $profilepic['error'];
+				$profilepic_error = $profilepicture['error'];
 			}
 			else
 			{
-				if($profilepic['width'] > 0 && $profilepic['height'] > 0)
+				if($profilepicture['width'] > 0 && $profilepicture['height'] > 0)
 				{
-					$profilepic_dimensions = $profilepic['width']."|".$profilepic['height'];
+					$profilepic_dimensions = $profilepicture['width']."|".$profilepicture['height'];
 				}
 				$updated_profilepic = array(
-					"profilepic" => $profilepic['profilepic'].'?dateline='.TIME_NOW,
+					"profilepic" => $profilepicture['profilepic'].'?dateline='.TIME_NOW,
 					"profilepicdimensions" => $profilepic_dimensions,
 					"profilepictype" => "upload",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
@@ -681,7 +681,7 @@ function profilepic_run()
 						"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 					);
 					$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
-					remove_profilepic($mybb->user['uid']);
+					remove_profilepicture($mybb->user['uid']);
 				}
 			}
 		}
@@ -857,7 +857,7 @@ function profilepic_removal()
 			"profilepicdimensions" => "",
 			"profilepictype" => ""
 		);
-		remove_profilepic($user['uid']);
+		remove_profilepicture($user['uid']);
 
 		$db->update_query("users", $updated_profilepic, "uid='{$user['uid']}'");
 	}
@@ -1031,13 +1031,13 @@ function profilepic_user_commit()
 			"profilepicdimensions" => "",
 			"profilepictype" => ""
 		);
-		remove_profilepic($user['uid']);
+		remove_profilepicture($user['uid']);
 	}
 
 	// Are we uploading a new profile picture?
 	if($_FILES['profilepicture_upload']['name'])
 	{
-		$profilepicture = upload_profilepic($_FILES['profilepicture_upload'], $user['uid']);
+		$profilepicture = upload_profilepicture($_FILES['profilepicture_upload'], $user['uid']);
 		if($profilepicture['error'])
 		{
 			$errors = array($profilepicture['error']);
@@ -1138,7 +1138,7 @@ function profilepic_user_commit()
 					"profilepicdimensions" => $profilepicture_dimensions,
 					"profilepictype" => "remote"
 				);
-				remove_profilepic($user['uid']);
+				remove_profilepicture($user['uid']);
 			}
 			else
 			{

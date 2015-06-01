@@ -44,11 +44,11 @@ $l['using_remote_profilepic'] = "You are currently using an remote profile pictu
 $l['profile_picture_mine'] = "This is your Profile Picture";
 
 $l['error_uploadfailed'] = "The file upload failed. Please choose a valid file and try again. ";
-$l['error_profilepictype'] = "Invalid file type. An uploaded profile picture must be in GIF, JPEG, or PNG format.";
+$l['error_profilepicturetype'] = "Invalid file type. An uploaded profile picture must be in GIF, JPEG, or PNG format.";
 $l['error_invalidprofilepicurl'] = "The URL you entered for your profile picture does not appear to be valid. Please ensure you enter a valid URL.";
-$l['error_profilepictoobig'] = "Sorry but we cannot change your profile picture as the new picture you specified is too big. The maximum dimensions are {1}x{2} (width x height)";
-$l['error_profilepicresizefailed'] = "Your profile picture was unable to be resized so that it is within the required dimensions.";
-$l['error_profilepicuserresize'] = "You can also try checking the 'attempt to resize my profile picture' check box and uploading the same image again.";
+$l['error_profilepicturetoobig'] = "Sorry but we cannot change your profile picture as the new picture you specified is too big. The maximum dimensions are {1}x{2} (width x height)";
+$l['error_profilepictureresizefailed'] = "Your profile picture was unable to be resized so that it is within the required dimensions.";
+$l['error_profilepictureuserresize'] = "You can also try checking the 'attempt to resize my profile picture' check box and uploading the same image again.";
 $l['error_uploadsize'] = "The size of the uploaded file is too large.";
 $l['error_descriptiontoobig'] = "Your profile picture description is too long. The maximum length for descriptions is 255 characters.";
 
