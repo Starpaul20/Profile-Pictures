@@ -512,7 +512,7 @@ function profilepic_run()
 {
 	global $db, $mybb, $lang, $templates, $theme, $headerinclude, $usercpnav, $header, $profilepic, $footer;
 	$lang->load("profilepic");
-	require_once MYBB_ROOT."inc/functions_profilepic.php";
+	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
 	if($mybb->input['action'] == "do_profilepic" && $mybb->request_method == "post")
 	{
@@ -798,7 +798,7 @@ function profilepic_profile()
 {
 	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepic, $description;
 	$lang->load("profilepic");
-	require_once MYBB_ROOT."inc/functions_profilepic.php";
+	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
 	$lang->users_profilepic = $lang->sprintf($lang->users_profilepic, $memprofile['username']);
 
@@ -848,7 +848,7 @@ function profilepic_online_location($plugin_array)
 function profilepic_removal()
 {
 	global $mybb, $db, $user;
-	require_once MYBB_ROOT."inc/functions_profilepic.php";
+	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
 	if($mybb->input['remove_profilepic'])
 	{
@@ -1020,7 +1020,7 @@ function profilepic_user_commit()
 {
 	global $db, $extra_user_updates, $mybb, $errors, $user;
 
-	require_once MYBB_ROOT."inc/functions_profilepic.php";
+	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 	$user_permissions = user_permissions($user['uid']);
 
 	// Are we removing a profile picture from this user?
