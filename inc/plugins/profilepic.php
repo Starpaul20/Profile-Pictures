@@ -59,8 +59,8 @@ $plugins->add_hook("fetch_wol_activity_end", "profilepic_online_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "profilepic_online_location");
 $plugins->add_hook("modcp_do_editprofile_start", "profilepic_removal");
 $plugins->add_hook("modcp_editprofile_start", "profilepic_removal_lang");
+$plugins->add_hook("datahandler_user_delete_content", "profilepic_user_delete");
 
-$plugins->add_hook("admin_user_users_delete_commit", "profilepic_user_delete");
 $plugins->add_hook("admin_user_users_edit_graph_tabs", "profilepic_user_options");
 $plugins->add_hook("admin_user_users_edit_graph", "profilepic_user_graph");
 $plugins->add_hook("admin_user_users_edit_commit_start", "profilepic_user_commit");
@@ -889,15 +889,19 @@ function profilepic_removal_lang()
 }
 
 // Delete profile picture if user is deleted
-function profilepic_user_delete()
+function profilepic_user_delete($delete)
 {
-	global $db, $mybb, $user;
+	global $db;
 
-	if($user['profilepictype'] == "upload")
+	// Remove any of the user(s) uploaded profile pictures
+	$query = $db->simple_select('users', 'profilepic', "uid IN({$delete->delete_uids}) AND profilepictype='upload'");
+	while($profilepicture = $db->fetch_field($query, 'profilepic'))
 	{
-		// Removes the ./ at the beginning the timestamp on the end...
-		@unlink("../".substr($user['profilepic'], 2, -20));
+		$profilepicture = substr($profilepicture, 2, -20);
+		@unlink(MYBB_ROOT.$profilepicture);
 	}
+
+	return $delete;
 }
 
 // Edit user options in Admin CP
