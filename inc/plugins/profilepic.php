@@ -912,7 +912,7 @@ function profilepic_user_options($tabs)
 
 function profilepic_user_graph()
 {
-	global $lang, $form, $mybb, $plugins, $user;
+	global $lang, $form, $mybb, $user;
 	$lang->load("profilepic", true);
 
 	$profile_picture_dimensions = explode("|", $user['profilepicdimensions']);
@@ -963,8 +963,15 @@ function profilepic_user_graph()
 		$profilepicture_url = $user['profilepic'];
 	}
 
+	$profilepicture_description = '';
+	if(!empty($user['profilepicdescription']))
+	{
+		$profilepicture_description = htmlspecialchars_uni($user['profilepicdescription']);
+	}
+
 	if($errors)
 	{
+		$profilepicture_description = htmlspecialchars_uni($mybb->input['profilepicture_description']);
 		$profilepicture_url = htmlspecialchars_uni($mybb->input['profilepicture_url']);
 	}
 
@@ -1004,6 +1011,7 @@ function profilepic_user_graph()
 	$form_container = new FormContainer($lang->specify_custom_profile_picture);
 	$form_container->output_row($lang->upload_profile_picture, $auto_resize, $form->generate_file_upload_box('profilepicture_upload', array('id' => 'profilepicture_upload')), 'profilepicture_upload');
 	$form_container->output_row($lang->or_specify_profile_picture_url, "", $form->generate_text_box('profilepicture_url', $profilepicture_url, array('id' => 'profilepicture_url')), 'profilepicture_url');
+	$form_container->output_row($lang->profile_picture_description, "", $form->generate_text_area('profilepicture_description', $profilepicture_description, array('id' => 'profilepicture_description', 'maxlength' => '255')), 'profilepicture_description');
 	$form_container->end();
 	echo "</div>\n";
 }
@@ -1137,6 +1145,15 @@ function profilepic_user_commit()
 				$errors = array($profilepicture_error);
 			}
 		}
+	}
+
+	if($mybb->input['profilepicture_description'] != $user['profilepicdescription'])
+	{
+		$profilepicture_description = my_substr($mybb->input['profilepicture_description'], 0, 255);
+
+		$extra_user_updates = array(
+			"profilepicdescription" => $db->escape_string($profilepicture_description)
+		);
 	}
 }
 

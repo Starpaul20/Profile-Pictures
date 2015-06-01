@@ -60,6 +60,7 @@ $l['specify_custom_profile_picture'] = "Specify Custom Profile Picture";
 $l['upload_profile_picture'] = "Upload Profile Picture";
 $l['profile_picture_auto_resize'] = "If the profile picture is too large, it will automatically be resized";
 $l['or_specify_profile_picture_url'] = "or Specify Profile Picture/Gravatar URL";
+$l['profile_picture_description'] = "Profile Picture Description";
 $l['profile_picture_max_size'] = "Profile Pictures can be a maximum of";
 $l['profile_picture_desc'] = "Below you can manage the profile picture for this user. Profile Pictures are small identifying images shown in a user's profile.";
 $l['profile_picture_max_dimensions_are'] = "The maximum dimensions for profile pictures are";
