@@ -61,6 +61,9 @@ $plugins->add_hook("modcp_do_editprofile_start", "profilepic_removal");
 $plugins->add_hook("modcp_editprofile_start", "profilepic_removal_lang");
 
 $plugins->add_hook("admin_user_users_delete_commit", "profilepic_user_delete");
+$plugins->add_hook("admin_user_users_edit_graph_tabs", "profilepic_user_options");
+$plugins->add_hook("admin_user_users_edit_graph", "profilepic_user_graph");
+$plugins->add_hook("admin_user_users_edit_commit_start", "profilepic_user_commit");
 $plugins->add_hook("admin_formcontainer_end", "profilepic_usergroup_permission");
 $plugins->add_hook("admin_user_groups_edit_commit", "profilepic_usergroup_permission_commit");
 $plugins->add_hook("admin_tools_system_health_output_chmod_list", "profilepic_chmod");
@@ -894,6 +897,246 @@ function profilepic_user_delete()
 	{
 		// Removes the ./ at the beginning the timestamp on the end...
 		@unlink("../".substr($user['profilepic'], 2, -20));
+	}
+}
+
+// Edit user options in Admin CP
+function profilepic_user_options($tabs)
+{
+	global $lang;
+	$lang->load("profilepic", true);
+
+	$tabs['profilepicture'] = $lang->profile_picture;
+	return $tabs;
+}
+
+function profilepic_user_graph()
+{
+	global $lang, $form, $mybb, $plugins, $user;
+	$lang->load("profilepic", true);
+
+	$profile_picture_dimensions = explode("|", $user['profilepicdimensions']);
+	if($user['profilepic'])
+	{
+		if($user['profilepicdimensions'])
+		{
+			require_once MYBB_ROOT."inc/functions_image.php";
+			list($width, $height) = explode("|", $user['profilepicdimensions']);
+			$scaled_dimensions = scale_image($width, $height, 200, 200);
+		}
+		else
+		{
+			$scaled_dimensions = array(
+				"width" => 200,
+				"height" => 200
+			);
+		}
+		if(my_substr($user['profilepic'], 0, 7) !== 'http://' && my_substr($user['profilepic'], 0, 8) !== 'https://')
+		{
+			$user['profilepic'] = "../{$user['profilepic']}\n";
+		}
+	}
+	else
+	{
+		$user['profilepic'] = "../".$mybb->settings['useravatar'];
+		$scaled_dimensions = array(
+			"width" => 200,
+			"height" => 200
+		);
+	}
+	$profile_picture_top = ceil((206-$scaled_dimensions['height'])/2);
+
+	echo "<div id=\"tab_profilepicture\">\n";
+	$table = new Table;
+	$table->construct_header($lang->current_profile_picture, array('colspan' => 2));
+
+	$table->construct_cell("<div style=\"width: 206px; height: 206px;\" class=\"user_avatar\"><img src=\"".htmlspecialchars_uni($user['profilepic'])."\" width=\"{$scaled_dimensions['width']}\" style=\"margin-top: {$profile_picture_top}px\" height=\"{$scaled_dimensions['height']}\" alt=\"\" /></div>", array('width' => 1));
+
+	$profilepicture_url = '';
+	if($user['profilepictype'] == "upload" || stristr($user['profilepic'], $mybb->settings['profilepicuploadpath']))
+	{
+		$current_profile_picture_msg = "<br /><strong>{$lang->user_current_using_uploaded_profile_picture}</strong>";
+	}
+	elseif($user['profilepictype'] == "remote" || my_strpos(my_strtolower($user['profilepic']), "http://") !== false)
+	{
+		$current_profile_picture_msg = "<br /><strong>{$lang->user_current_using_remote_profile_picture}</strong>";
+		$profilepicture_url = $user['profilepic'];
+	}
+
+	if($errors)
+	{
+		$profilepicture_url = htmlspecialchars_uni($mybb->input['profilepicture_url']);
+	}
+
+	$user_permissions = user_permissions($user['uid']);
+
+	if($user_permissions['profilepicmaxdimensions'] != "")
+	{
+		list($max_width, $max_height) = explode("x", my_strtolower($user_permissions['profilepicmaxdimensions']));
+		$max_size = "<br />{$lang->profile_picture_max_dimensions_are} {$max_width}x{$max_height}";
+	}
+
+	if($user_permissions['profilepicmaxsize'])
+	{
+		$maximum_size = get_friendly_size($user_permissions['profilepicmaxsize']*1024);
+		$max_size .= "<br />{$lang->profile_picture_max_size} {$maximum_size}";
+	}
+
+	if($user['profilepic'])
+	{
+		$remove_profilepicture = "<br /><br />".$form->generate_check_box("remove_profilepicture", 1, "<strong>{$lang->remove_profile_picture_admin}</strong>");
+	}
+
+	$table->construct_cell($lang->profile_picture_desc."{$remove_profilepicture}<br /><small>{$max_size}</small>");
+	$table->construct_row();
+
+	$table->output($lang->profile_picture.": {$user['username']}");
+
+	// Custom profile picture
+	if($mybb->settings['profilepicresizing'] == "auto")
+	{
+		$auto_resize = $lang->profile_picture_auto_resize;
+	}
+	else if($mybb->settings['profilepicresizing'] == "user")
+	{
+		$auto_resize = "<input type=\"checkbox\" name=\"auto_resize\" value=\"1\" checked=\"checked\" id=\"auto_resize\" /> <label for=\"auto_resize\">{$lang->attempt_to_auto_resize_profile_picture}</label></span>";
+	}
+	$form_container = new FormContainer($lang->specify_custom_profile_picture);
+	$form_container->output_row($lang->upload_profile_picture, $auto_resize, $form->generate_file_upload_box('profilepicture_upload', array('id' => 'profilepicture_upload')), 'profilepicture_upload');
+	$form_container->output_row($lang->or_specify_profile_picture_url, "", $form->generate_text_box('profilepicture_url', $profilepicture_url, array('id' => 'profilepicture_url')), 'profilepicture_url');
+	$form_container->end();
+	echo "</div>\n";
+}
+
+function profilepic_user_commit()
+{
+	global $db, $extra_user_updates, $mybb, $errors, $user;
+
+	require_once MYBB_ROOT."inc/functions_profilepic.php";
+	$user_permissions = user_permissions($user['uid']);
+
+	// Are we removing a profile picture from this user?
+	if($mybb->input['remove_profilepicture'])
+	{
+		$extra_user_updates = array(
+			"profilepic" => "",
+			"profilepicdimensions" => "",
+			"profilepictype" => ""
+		);
+		remove_profilepic($user['uid']);
+	}
+
+	// Are we uploading a new profile picture?
+	if($_FILES['profilepicture_upload']['name'])
+	{
+		$profilepicture = upload_profilepic($_FILES['profilepicture_upload'], $user['uid']);
+		if($profilepicture['error'])
+		{
+			$errors = array($profilepicture['error']);
+		}
+		else
+		{
+			if($profilepicture['width'] > 0 && $profilepicture['height'] > 0)
+			{
+				$profilepicture_dimensions = $profilepicture['width']."|".$profilepicture['height'];
+			}
+			$extra_user_updates = array(
+				"profilepic" => $profilepicture['profilepic'].'?dateline='.TIME_NOW,
+				"profilepicdimensions" => $profilepicture_dimensions,
+				"profilepictype" => "upload"
+			);
+		}
+	}
+	// Are we setting a new profile picture from a URL?
+	else if($mybb->input['profilepicture_url'] && $mybb->input['profilepicture_url'] != $user['profilepic'])
+	{
+		if(filter_var($mybb->input['profilepicture_url'], FILTER_VALIDATE_EMAIL) !== false)
+		{
+			// Gravatar
+			$email = md5(strtolower(trim($mybb->input['profilepicture_url'])));
+
+			$s = '';
+			if(!$user_permissions['profilepicmaxdimensions'])
+			{
+				$user_permissions['profilepicmaxdimensions'] = '200x200'; // Hard limit of 200 if there are no limits
+			}
+
+			// Because Gravatars are square, hijack the width
+			list($maxwidth, $maxheight) = explode("x", my_strtolower($user_permissions['profilepicmaxdimensions']));
+
+			$s = "?s={$maxwidth}";
+			$maxheight = (int)$maxwidth;
+
+			$extra_user_updates = array(
+				"profilepic" => "http://www.gravatar.com/avatar/{$email}{$s}",
+				"profilepicdimensions" => "{$maxheight}|{$maxheight}",
+				"profilepictype" => "gravatar"
+			);
+		}
+		else
+		{
+			$mybb->input['profilepicture_url'] = preg_replace("#script:#i", "", $mybb->input['profilepicture_url']);
+			$ext = get_extension($mybb->input['profilepicture_url']);
+
+			// Copy the profile picture to the local server (work around remote URL access disabled for getimagesize)
+			$file = fetch_remote_file($mybb->input['profilepicture_url']);
+			if(!$file)
+			{
+				$profilepicture_error = $lang->error_invalidprofilepicurl;
+			}
+			else
+			{
+				$tmp_name = "../".$mybb->settings['profilepicuploadpath']."/remote_".md5(random_str());
+				$fp = @fopen($tmp_name, "wb");
+				if(!$fp)
+				{
+					$profilepicture_error = $lang->error_invalidprofilepicurl;
+				}
+				else
+				{
+					fwrite($fp, $file);
+					fclose($fp);
+					list($width, $height, $type) = @getimagesize($tmp_name);
+					@unlink($tmp_name);
+					echo $type;
+					if(!$type)
+					{
+						$profilepicture_error = $lang->error_invalidprofilepicurl;
+					}
+				}
+			}
+
+			if(empty($profilepicture_error))
+			{
+				if($width && $height && $user_permissions['profilepicmaxdimensions'] != "")
+				{
+					list($maxwidth, $maxheight) = explode("x", my_strtolower($user_permissions['profilepicmaxdimensions']));
+					if(($maxwidth && $width > $maxwidth) || ($maxheight && $height > $maxheight))
+					{
+						$lang->error_profilepictoobig = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
+						$profilepicture_error = $lang->error_profilepictoobig;
+					}
+				}
+			}
+
+			if(empty($profilepicture_error))
+			{
+				if($width > 0 && $height > 0)
+				{
+					$profilepicture_dimensions = (int)$width."|".(int)$height;
+				}
+				$extra_user_updates = array(
+					"profilepic" => $db->escape_string($mybb->input['profilepicture_url'].'?dateline='.TIME_NOW),
+					"profilepicdimensions" => $profilepicture_dimensions,
+					"profilepictype" => "remote"
+				);
+				remove_profilepic($user['uid']);
+			}
+			else
+			{
+				$errors = array($profilepicture_error);
+			}
+		}
 	}
 }
 

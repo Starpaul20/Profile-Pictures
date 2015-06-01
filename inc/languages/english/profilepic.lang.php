@@ -52,4 +52,17 @@ $l['error_profilepicuserresize'] = "You can also try checking the 'attempt to re
 $l['error_uploadsize'] = "The size of the uploaded file is too large.";
 $l['error_descriptiontoobig'] = "Your profile picture description is too long. The maximum length for descriptions is 255 characters.";
 
+$l['current_profile_picture'] = "Current Profile Picture";
+$l['remove_profile_picture_admin'] = "Remove current profile picture?";
+$l['user_current_using_uploaded_profile_picture'] = "This user is currently using an uploaded profile picture.";
+$l['user_current_using_remote_profile_picture'] = "This user is currently using a remotely linked profile picture.";
+$l['specify_custom_profile_picture'] = "Specify Custom Profile Picture";
+$l['upload_profile_picture'] = "Upload Profile Picture";
+$l['profile_picture_auto_resize'] = "If the profile picture is too large, it will automatically be resized";
+$l['or_specify_profile_picture_url'] = "or Specify Profile Picture/Gravatar URL";
+$l['profile_picture_max_size'] = "Profile Pictures can be a maximum of";
+$l['profile_picture_desc'] = "Below you can manage the profile picture for this user. Profile Pictures are small identifying images shown in a user's profile.";
+$l['profile_picture_max_dimensions_are'] = "The maximum dimensions for profile pictures are";
+$l['attempt_to_auto_resize_profile_picture'] = "Attempt to resize this profile picture if it is too large?";
+
 ?>
