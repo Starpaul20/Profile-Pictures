@@ -257,15 +257,24 @@ function format_profile_picture($profilepicture, $dimensions = '', $max_dimensio
 		$dimensions = '';
 	}
 
-	if(isset($profilepictures[$profilepicture]))
+	// An empty key wouldn't work so we need to add a fall back
+	$key = $dimensions;
+	if(empty($key))
 	{
-		return $profilepictures[$profilepicture];
+		$key = 'default';
+	}
+	$key2 = $max_dimensions;
+	if(empty($key2))
+	{
+		$key2 = 'default';
 	}
 
-	if(!$max_dimensions)
+	if(isset($profilepictures[$profilepicture][$key][$key2]))
 	{
-		$max_dimensions = $mybb->usergroup['profilepicmaxdimensions'];
+		return $profilepictures[$profilepicture][$key][$key2];
 	}
+
+	$profilepicture_width_height = '';
 
 	if($dimensions)
 	{
@@ -275,7 +284,7 @@ function format_profile_picture($profilepicture, $dimensions = '', $max_dimensio
 		{
 			list($max_width, $max_height) = explode('x', $max_dimensions);
 
-			if($dimensions[0] > $max_width || $dimensions[1] > $max_height)
+			if(!empty($max_dimensions) && ($dimensions[0] > $max_width || $dimensions[1] > $max_height))
 			{
 				require_once MYBB_ROOT."inc/functions_image.php";
 				$scaled_dimensions = scale_image($dimensions[0], $dimensions[1], $max_width, $max_height);
@@ -288,12 +297,12 @@ function format_profile_picture($profilepicture, $dimensions = '', $max_dimensio
 		}
 	}
 
-	$profilepictures[$profilepicture] = array(
-		'image' => $mybb->get_asset_url($profilepicture),
+	$profilepictures[$profilepicture][$key][$key2] = array(
+		'image' => htmlspecialchars_uni($mybb->get_asset_url($profilepicture)),
 		'width_height' => $profilepicture_width_height
 	);
 
-	return $profilepictures[$profilepicture];
+	return $profilepictures[$profilepicture][$key][$key2];
 }
 
 ?>
