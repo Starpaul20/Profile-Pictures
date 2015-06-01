@@ -1,3 +1,13 @@
+1.1 (June 1st, 2015)
+- Added PostgreSQL and SQLite support
+- Added Admin CP edit user section
+- Using generate_numeric_field function
+- Changed (int)$mybb->input to $mybb->get_input
+- Updated format_profile_picture function
+- Renamed profile picture functions and file
+- Updated user deletion function
+- Renamed User CP link
+
 1.0 (September 11th, 2014)
 - Updated plugin to work with MyBB 1.8
 - Added Gravatar support
