@@ -89,15 +89,42 @@ function profilepic_install()
 	global $db, $cache;
 	profilepic_uninstall();
 
-	$db->add_column("users", "profilepic", "varchar(200) NOT NULL default ''");
-	$db->add_column("users", "profilepicdimensions", "varchar(10) NOT NULL default ''");
-	$db->add_column("users", "profilepictype", "varchar(10) NOT NULL default ''");
-	$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
+	switch($db->type)
+	{
+		case "pgsql":
+			$db->add_column("users", "profilepic", "varchar(200) NOT NULL default ''");
+			$db->add_column("users", "profilepicdimensions", "varchar(10) NOT NULL default ''");
+			$db->add_column("users", "profilepictype", "varchar(10) NOT NULL default ''");
+			$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
 
-	$db->add_column("usergroups", "canuseprofilepic", "tinyint(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "canuploadprofilepic", "tinyint(1) NOT NULL default '1'");
-	$db->add_column("usergroups", "profilepicmaxsize", "int unsigned NOT NULL default '40'");
-	$db->add_column("usergroups", "profilepicmaxdimensions", "varchar(10) NOT NULL default '200x200'");
+			$db->add_column("usergroups", "canuseprofilepic", "smallint NOT NULL default '1'");
+			$db->add_column("usergroups", "canuploadprofilepic", "smallint NOT NULL default '1'");
+			$db->add_column("usergroups", "profilepicmaxsize", "int NOT NULL default '40'");
+			$db->add_column("usergroups", "profilepicmaxdimensions", "varchar(10) NOT NULL default '200x200'");
+			break;
+		case "sqlite":
+			$db->add_column("users", "profilepic", "varchar(200) NOT NULL default ''");
+			$db->add_column("users", "profilepicdimensions", "varchar(10) NOT NULL default ''");
+			$db->add_column("users", "profilepictype", "varchar(10) NOT NULL default ''");
+			$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
+
+			$db->add_column("usergroups", "canuseprofilepic", "tinyint(1) NOT NULL default '1'");
+			$db->add_column("usergroups", "canuploadprofilepic", "tinyint(1) NOT NULL default '1'");
+			$db->add_column("usergroups", "profilepicmaxsize", "int NOT NULL default '40'");
+			$db->add_column("usergroups", "profilepicmaxdimensions", "varchar(10) NOT NULL default '200x200'");
+			break;
+		default:
+			$db->add_column("users", "profilepic", "varchar(200) NOT NULL default ''");
+			$db->add_column("users", "profilepicdimensions", "varchar(10) NOT NULL default ''");
+			$db->add_column("users", "profilepictype", "varchar(10) NOT NULL default ''");
+			$db->add_column("users", "profilepicdescription", "varchar(255) NOT NULL default ''");
+
+			$db->add_column("usergroups", "canuseprofilepic", "tinyint(1) NOT NULL default '1'");
+			$db->add_column("usergroups", "canuploadprofilepic", "tinyint(1) NOT NULL default '1'");
+			$db->add_column("usergroups", "profilepicmaxsize", "int unsigned NOT NULL default '40'");
+			$db->add_column("usergroups", "profilepicmaxdimensions", "varchar(10) NOT NULL default '200x200'");
+			break;
+	}
 
 	$cache->update_usergroups();
 }
