@@ -1178,9 +1178,9 @@ function profilepic_usergroup_permission()
 function profilepic_usergroup_permission_commit()
 {
 	global $db, $mybb, $updated_group;
-	$updated_group['canuseprofilepic'] = (int)$mybb->input['canuseprofilepic'];
-	$updated_group['canuploadprofilepic'] = (int)$mybb->input['canuploadprofilepic'];
-	$updated_group['profilepicmaxsize'] = (int)$mybb->input['profilepicmaxsize'];
+	$updated_group['canuseprofilepic'] = $mybb->get_input('canuseprofilepic', MyBB::INPUT_INT);
+	$updated_group['canuploadprofilepic'] = $mybb->get_input('canuploadprofilepic', MyBB::INPUT_INT);
+	$updated_group['profilepicmaxsize'] = $mybb->get_input('profilepicmaxsize', MyBB::INPUT_INT);
 	$updated_group['profilepicmaxdimensions'] = $db->escape_string($mybb->input['profilepicmaxdimensions']);
 }
 
