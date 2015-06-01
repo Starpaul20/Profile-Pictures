@@ -1168,7 +1168,7 @@ function profilepic_usergroup_permission()
 		$profilepic_options = array(
 	 		$form->generate_check_box('canuseprofilepic', 1, $lang->can_use_profilepic, array("checked" => $mybb->input['canuseprofilepic'])),
 			$form->generate_check_box('canuploadprofilepic', 1, $lang->can_upload_profilepic, array("checked" => $mybb->input['canuploadprofilepic'])),
-			"{$lang->profile_pic_size}<br /><small>{$lang->profile_pic_size_desc}</small><br />".$form->generate_text_box('profilepicmaxsize', $mybb->input['profilepicmaxsize'], array('id' => 'profilepicmaxsize', 'class' => 'field50')). "KB",
+			"{$lang->profile_pic_size}<br /><small>{$lang->profile_pic_size_desc}</small><br />".$form->generate_numeric_field('profilepicmaxsize', $mybb->input['profilepicmaxsize'], array('id' => 'profilepicmaxsize', 'class' => 'field50', 'min' => 0)). "KB",
 			"{$lang->profile_pic_dims}<br /><small>{$lang->profile_pic_dims_desc}</small><br />".$form->generate_text_box('profilepicmaxdimensions', $mybb->input['profilepicmaxdimensions'], array('id' => 'profilepicmaxdimensions', 'class' => 'field'))
 		);
 		$form_container->output_row($lang->profile_picture, "", "<div class=\"group_settings_bit\">".implode("</div><div class=\"group_settings_bit\">", $profilepic_options)."</div>");
