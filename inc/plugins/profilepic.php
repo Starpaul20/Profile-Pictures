@@ -630,7 +630,7 @@ function profilepic_run()
 				}
 				else
 				{
-					$tmp_name = $mybb->settings['profilepicuploadpath']."/remote_".md5(uniqid(rand(), true));
+					$tmp_name = $mybb->settings['profilepicuploadpath']."/remote_".md5(random_str());
 					$fp = @fopen($tmp_name, "wb");
 					if(!$fp)
 					{
@@ -662,8 +662,8 @@ function profilepic_run()
 						list($maxwidth, $maxheight) = explode("x", my_strtolower($mybb->usergroup['profilepicmaxdimensions']));
 						if(($maxwidth && $width > $maxwidth) || ($maxheight && $height > $maxheight))
 						{
-							$lang->error_profilepictoobig = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
-							$profilepic_error = $lang->error_profilepictoobig;
+							$lang->error_profilepicturetoobig = $lang->sprintf($lang->error_profilepicturetoobig, $maxwidth, $maxheight);
+							$profilepic_error = $lang->error_profilepicturetoobig;
 						}
 					}
 				}
@@ -1125,8 +1125,8 @@ function profilepic_user_commit()
 					list($maxwidth, $maxheight) = explode("x", my_strtolower($user_permissions['profilepicmaxdimensions']));
 					if(($maxwidth && $width > $maxwidth) || ($maxheight && $height > $maxheight))
 					{
-						$lang->error_profilepictoobig = $lang->sprintf($lang->error_profilepictoobig, $maxwidth, $maxheight);
-						$profilepicture_error = $lang->error_profilepictoobig;
+						$lang->error_profilepicturetoobig = $lang->sprintf($lang->error_profilepicturetoobig, $maxwidth, $maxheight);
+						$profilepicture_error = $lang->error_profilepicturetoobig;
 					}
 				}
 			}
