@@ -609,7 +609,7 @@ function profilepic_run()
 				}
 
 				$updated_avatar = array(
-					"profilepic" => "http://www.gravatar.com/avatar/{$email}{$s}.jpg",
+					"profilepic" => "https://www.gravatar.com/avatar/{$email}{$s}",
 					"profilepicdimensions" => "{$maxheight}|{$maxheight}",
 					"profilepictype" => "gravatar",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
@@ -1080,7 +1080,7 @@ function profilepic_user_commit()
 			$maxheight = (int)$maxwidth;
 
 			$extra_user_updates = array(
-				"profilepic" => "http://www.gravatar.com/avatar/{$email}{$s}",
+				"profilepic" => "https://www.gravatar.com/avatar/{$email}{$s}",
 				"profilepicdimensions" => "{$maxheight}|{$maxheight}",
 				"profilepictype" => "gravatar"
 			);
