@@ -528,13 +528,13 @@ function profilepic_run()
 
 		if(!empty($mybb->input['remove'])) // remove profile picture
 		{
-			$updated_profilepic = array(
+			$updated_profilepicture = array(
 				"profilepic" => "",
 				"profilepicdimensions" => "",
 				"profilepictype" => "",
 				"profilepicdescription" => ""
 			);
-			$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
+			$db->update_query("users", $updated_profilepicture, "uid='{$mybb->user['uid']}'");
 			remove_profilepicture($mybb->user['uid']);
 		}
 		elseif($_FILES['profilepictureupload']['name']) // upload profile picture
@@ -561,13 +561,13 @@ function profilepic_run()
 				{
 					$profilepic_dimensions = $profilepicture['width']."|".$profilepicture['height'];
 				}
-				$updated_profilepic = array(
+				$updated_profilepicture = array(
 					"profilepic" => $profilepicture['profilepic'].'?dateline='.TIME_NOW,
 					"profilepicdimensions" => $profilepic_dimensions,
 					"profilepictype" => "upload",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
-				$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
+				$db->update_query("users", $updated_profilepicture, "uid='{$mybb->user['uid']}'");
 			}
 		}
 		elseif($mybb->input['profilepicurl']) // remote profile picture
@@ -608,14 +608,14 @@ function profilepic_run()
 					$profilepic_error = $lang->error_descriptiontoobig;
 				}
 
-				$updated_avatar = array(
+				$updated_profilepicture = array(
 					"profilepic" => "https://www.gravatar.com/avatar/{$email}{$s}",
 					"profilepicdimensions" => "{$maxheight}|{$maxheight}",
 					"profilepictype" => "gravatar",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
 
-				$db->update_query("users", $updated_avatar, "uid = '{$mybb->user['uid']}'");
+				$db->update_query("users", $updated_profilepicture, "uid = '{$mybb->user['uid']}'");
 			}
 			else
 			{
@@ -674,13 +674,13 @@ function profilepic_run()
 					{
 						$profilepic_dimensions = (int)$width."|".(int)$height;
 					}
-					$updated_profilepic = array(
+					$updated_profilepicture = array(
 						"profilepic" => $db->escape_string($mybb->input['profilepicurl'].'?dateline='.TIME_NOW),
 						"profilepicdimensions" => $profilepic_dimensions,
 						"profilepictype" => "remote",
 						"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 					);
-					$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
+					$db->update_query("users", $updated_profilepicture, "uid='{$mybb->user['uid']}'");
 					remove_profilepicture($mybb->user['uid']);
 				}
 			}
@@ -695,10 +695,10 @@ function profilepic_run()
 
 			if(empty($profilepic_error))
 			{
-				$updated_profilepic = array(
+				$updated_profilepicture = array(
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 				);
-				$db->update_query("users", $updated_profilepic, "uid='{$mybb->user['uid']}'");
+				$db->update_query("users", $updated_profilepicture, "uid='{$mybb->user['uid']}'");
 			}
 		}
 
@@ -852,23 +852,23 @@ function profilepic_removal()
 
 	if($mybb->input['remove_profilepic'])
 	{
-		$updated_profilepic = array(
+		$updated_profilepicture = array(
 			"profilepic" => "",
 			"profilepicdimensions" => "",
 			"profilepictype" => ""
 		);
 		remove_profilepicture($user['uid']);
 
-		$db->update_query("users", $updated_profilepic, "uid='{$user['uid']}'");
+		$db->update_query("users", $updated_profilepicture, "uid='{$user['uid']}'");
 	}
 
 	// Update description if active
 	if($mybb->settings['profilepicdescription'] == 1)
 	{
-		$updated_profilepic = array(
+		$updated_profilepicture = array(
 			"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
 		);
-		$db->update_query("users", $updated_profilepic, "uid='{$user['uid']}'");
+		$db->update_query("users", $updated_profilepicture, "uid='{$user['uid']}'");
 	}
 }
 
