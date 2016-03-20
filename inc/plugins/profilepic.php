@@ -279,7 +279,7 @@ x=X',
 <tr>
 	{$usercpnav}
 	<td valign="top">
-		{$profilepic_error}
+		{$profilepicture_error}
 		<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
 			<tr>
 				<td class="thead" colspan="2"><strong>{$lang->change_profilepicture}</strong></td>
@@ -524,7 +524,7 @@ function profilepic_run()
 			error_no_permission();
 		}
 
-		$profilepic_error = "";
+		$profilepicture_error = "";
 
 		if(!empty($mybb->input['remove'])) // remove profile picture
 		{
@@ -547,13 +547,13 @@ function profilepic_run()
 			// See if profile picture description is too long
 			if(my_strlen($mybb->input['profilepicdescription']) > 255)
 			{
-				$profilepic_error = $lang->error_descriptiontoobig;
+				$profilepicture_error = $lang->error_descriptiontoobig;
 			}
 
 			$profilepicture = upload_profilepicture();
 			if($profilepicture['error'])
 			{
-				$profilepic_error = $profilepicture['error'];
+				$profilepicture_error = $profilepicture['error'];
 			}
 			else
 			{
@@ -605,7 +605,7 @@ function profilepic_run()
 				// See if profile picture description is too long
 				if(my_strlen($mybb->input['profilepicdescription']) > 255)
 				{
-					$profilepic_error = $lang->error_descriptiontoobig;
+					$profilepicture_error = $lang->error_descriptiontoobig;
 				}
 
 				$updated_profilepicture = array(
@@ -626,7 +626,7 @@ function profilepic_run()
 				$file = fetch_remote_file($mybb->input['profilepicurl']);
 				if(!$file)
 				{
-					$profilepic_error = $lang->error_invalidprofilepicurl;
+					$profilepicture_error = $lang->error_invalidprofilepicurl;
 				}
 				else
 				{
@@ -634,7 +634,7 @@ function profilepic_run()
 					$fp = @fopen($tmp_name, "wb");
 					if(!$fp)
 					{
-						$profilepic_error = $lang->error_invalidprofilepicurl;
+						$profilepicture_error = $lang->error_invalidprofilepicurl;
 					}
 					else
 					{
@@ -644,7 +644,7 @@ function profilepic_run()
 						@unlink($tmp_name);
 						if(!$type)
 						{
-							$profilepic_error = $lang->error_invalidprofilepicurl;
+							$profilepicture_error = $lang->error_invalidprofilepicurl;
 						}
 					}
 				}
@@ -652,10 +652,10 @@ function profilepic_run()
 				// See if profile picture description is too long
 				if(my_strlen($mybb->input['profilepicdescription']) > 255)
 				{
-					$profilepic_error = $lang->error_descriptiontoobig;
+					$profilepicture_error = $lang->error_descriptiontoobig;
 				}
 
-				if(empty($profilepic_error))
+				if(empty($profilepicture_error))
 				{
 					if($width && $height && $mybb->usergroup['profilepicmaxdimensions'] != "")
 					{
@@ -663,12 +663,12 @@ function profilepic_run()
 						if(($maxwidth && $width > $maxwidth) || ($maxheight && $height > $maxheight))
 						{
 							$lang->error_profilepicturetoobig = $lang->sprintf($lang->error_profilepicturetoobig, $maxwidth, $maxheight);
-							$profilepic_error = $lang->error_profilepicturetoobig;
+							$profilepicture_error = $lang->error_profilepicturetoobig;
 						}
 					}
 				}
 
-				if(empty($profilepic_error))
+				if(empty($profilepicture_error))
 				{
 					if($width > 0 && $height > 0)
 					{
@@ -690,10 +690,10 @@ function profilepic_run()
 			// See if profile picture description is too long
 			if(my_strlen($mybb->input['profilepicdescription']) > 255)
 			{
-				$profilepic_error = $lang->error_descriptiontoobig;
+				$profilepicture_error = $lang->error_descriptiontoobig;
 			}
 
-			if(empty($profilepic_error))
+			if(empty($profilepicture_error))
 			{
 				$updated_profilepicture = array(
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicdescription'])
@@ -702,14 +702,14 @@ function profilepic_run()
 			}
 		}
 
-		if(empty($profilepic_error))
+		if(empty($profilepicture_error))
 		{
 			redirect("usercp.php?action=profilepic", $lang->redirect_profilepicupdated);
 		}
 		else
 		{
 			$mybb->input['action'] = "profilepic";
-			$profilepic_error = inline_error($profilepic_error);
+			$profilepicture_error = inline_error($profilepicture_error);
 		}
 	}
 
@@ -783,9 +783,9 @@ function profilepic_run()
 			eval("\$removeprofilepicture = \"".$templates->get("usercp_profilepic_remove")."\";");
 		}
 
-		if(!isset($profilepic_error))
+		if(!isset($profilepicture_error))
 		{
-			$profilepic_error = '';
+			$profilepicture_error = '';
 		}
 
 		eval("\$profilepicture = \"".$templates->get("usercp_profilepic")."\";");
