@@ -372,7 +372,7 @@ x=X',
 		'title'		=> 'member_profile_profilepic',
 		'template'	=> $db->escape_string('<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
 <tr>
-<td class="thead"><strong>{$lang->users_profilepic}</strong></td>
+<td class="thead"><strong>{$lang->users_profile_picture}</strong></td>
 </tr>
 <tr>
 <td class="trow1" align="center">{$profilepic_img}<br />
@@ -800,7 +800,7 @@ function profilepic_profile()
 	$lang->load("profilepic");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
-	$lang->users_profilepic = $lang->sprintf($lang->users_profilepic, $memprofile['username']);
+	$lang->users_profile_picture = $lang->sprintf($lang->users_profile_picture, $memprofile['username']);
 
 	$profilepic = $profilepic_img = '';
 	if($memprofile['profilepic'])
@@ -838,7 +838,7 @@ function profilepic_online_location($plugin_array)
 
 	if($plugin_array['user_activity']['activity'] == "usercp_profilepic")
 	{
-		$plugin_array['location_name'] = $lang->changing_profilepic;
+		$plugin_array['location_name'] = $lang->changing_profile_picture;
 	}
 
 	return $plugin_array;
@@ -1170,10 +1170,10 @@ function profilepic_usergroup_permission()
 	if($run_module == 'user' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc)
 	{
 		$profilepic_options = array(
-	 		$form->generate_check_box('canuseprofilepic', 1, $lang->can_use_profilepic, array("checked" => $mybb->input['canuseprofilepic'])),
-			$form->generate_check_box('canuploadprofilepic', 1, $lang->can_upload_profilepic, array("checked" => $mybb->input['canuploadprofilepic'])),
-			"{$lang->profile_pic_size}<br /><small>{$lang->profile_pic_size_desc}</small><br />".$form->generate_numeric_field('profilepicmaxsize', $mybb->input['profilepicmaxsize'], array('id' => 'profilepicmaxsize', 'class' => 'field50', 'min' => 0)). "KB",
-			"{$lang->profile_pic_dims}<br /><small>{$lang->profile_pic_dims_desc}</small><br />".$form->generate_text_box('profilepicmaxdimensions', $mybb->input['profilepicmaxdimensions'], array('id' => 'profilepicmaxdimensions', 'class' => 'field'))
+			$form->generate_check_box('canuseprofilepic', 1, $lang->can_use_profile_picture, array("checked" => $mybb->input['canuseprofilepic'])),
+			$form->generate_check_box('canuploadprofilepic', 1, $lang->can_upload_profile_picture, array("checked" => $mybb->input['canuploadprofilepic'])),
+			"{$lang->profile_picture_size}<br /><small>{$lang->profile_picture_size_desc}</small><br />".$form->generate_numeric_field('profilepicmaxsize', $mybb->input['profilepicmaxsize'], array('id' => 'profilepicmaxsize', 'class' => 'field50', 'min' => 0)). "KB",
+			"{$lang->profile_picture_dims}<br /><small>{$lang->profile_picture_dims_desc}</small><br />".$form->generate_text_box('profilepicmaxdimensions', $mybb->input['profilepicmaxdimensions'], array('id' => 'profilepicmaxdimensions', 'class' => 'field'))
 		);
 		$form_container->output_row($lang->profile_picture, "", "<div class=\"group_settings_bit\">".implode("</div><div class=\"group_settings_bit\">", $profilepic_options)."</div>");
 	}

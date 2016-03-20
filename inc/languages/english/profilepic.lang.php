@@ -7,18 +7,21 @@
 $l['profilepic_info_name'] = "Profile Picture";
 $l['profilepic_info_desc'] = "Allows users to upload a picture to display in their profile.";
 
+// Admin CP
 $l['profile_picture'] = "Profile Picture";
-$l['users_profilepic'] = "{1}'s Profile Picture";
-$l['changing_profilepic'] = "<a href=\"usercp.php?action=profilepic\">Changing Profile Picture</a>";
-$l['remove_profile_picture'] = "Remove user's profile picture?";
-$l['can_use_profilepic'] = "Can use profile picture?";
-$l['can_upload_profilepic'] = "Can upload profile picture?";
-$l['profile_pic_size'] = "Maximum File Size:";
-$l['profile_pic_size_desc'] = "Maximum file size of an uploaded profile picture in kilobytes. If set to 0, there is no limit.";
-$l['profile_pic_dims'] = "Maximum Dimensions:";
-$l['profile_pic_dims_desc'] = "Maximum dimensions a profile picture can be, in the format of width<strong>x</strong>height. If this is left blank then there will be no dimension restriction.";
+$l['can_use_profile_picture'] = "Can use profile picture?";
+$l['can_upload_profile_picture'] = "Can upload profile picture?";
+$l['profile_picture_size'] = "Maximum File Size:";
+$l['profile_picture_size_desc'] = "Maximum file size of an uploaded profile picture in kilobytes. If set to 0, there is no limit.";
+$l['profile_picture_dims'] = "Maximum Dimensions:";
+$l['profile_picture_dims_desc'] = "Maximum dimensions a profile picture can be, in the format of width<strong>x</strong>height. If this is left blank then there will be no dimension restriction.";
 
 $l['profile_picture_upload_dir'] = "Profile Picture Uploads Directory";
+
+// Front end
+$l['users_profile_picture'] = "{1}'s Profile Picture";
+$l['changing_profile_picture'] = "<a href=\"usercp.php?action=profilepic\">Changing Profile Picture</a>";
+$l['remove_profile_picture'] = "Remove user's profile picture?";
 
 $l['nav_usercp'] = "User Control Panel";
 $l['ucp_nav_change_profilepicture'] = "Change Profile Picture";
