@@ -270,7 +270,7 @@ x=X',
 		'title'		=> 'usercp_profilepic',
 		'template'	=> $db->escape_string('<html>
 <head>
-<title>{$mybb->settings[\'bbname\']} - {$lang->change_profilepicture}</title>
+<title>{$mybb->settings[\'bbname\']} - {$lang->change_profile_picture}</title>
 {$headerinclude}
 </head>
 <body>
@@ -282,13 +282,13 @@ x=X',
 		{$profilepicture_error}
 		<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
 			<tr>
-				<td class="thead" colspan="2"><strong>{$lang->change_profilepicture}</strong></td>
+				<td class="thead" colspan="2"><strong>{$lang->change_profile_picture}</strong></td>
 			</tr>
 			<tr>
 				<td class="trow1" colspan="2">
 					<table cellspacing="0" cellpadding="0" width="100%">
 						<tr>
-							<td>{$lang->profilepic_note}{$profilepicmsg}
+							<td>{$lang->profile_picture_note}{$profilepicmsg}
 							{$currentprofilepic}
 							</td>
 						</tr>
@@ -296,19 +296,19 @@ x=X',
 				</td>
 			</tr>
 			<tr>
-				<td class="tcat" colspan="2"><strong>{$lang->custom_profile_pic}</strong></td>
+				<td class="tcat" colspan="2"><strong>{$lang->custom_profile_picture}</strong></td>
 			</tr>
 			<form enctype="multipart/form-data" action="usercp.php" method="post">
 			<input type="hidden" name="my_post_key" value="{$mybb->post_code}" />
 			{$profilepicupload}
 			<tr>
 				<td class="trow2" width="40%">
-					<strong>{$lang->profilepic_url}</strong>
-					<br /><span class="smalltext">{$lang->profilepic_url_note}</span>
+					<strong>{$lang->profile_picture_url}</strong>
+					<br /><span class="smalltext">{$lang->profile_picture_url_note}</span>
 				</td>
 				<td class="trow2" width="60%">
 					<input type="text" class="textbox" name="profilepicurl" size="45" value="{$profilepicurl}" />
-					<br /><span class="smalltext">{$lang->profilepic_url_gravatar}</span>
+					<br /><span class="smalltext">{$lang->profile_picture_url_gravatar}</span>
 				</td>
 			</tr>
 			{$profilepicdescription}
@@ -334,7 +334,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic_auto_resize_auto',
-		'template'	=> $db->escape_string('<br /><span class="smalltext">{$lang->profilepic_auto_resize_note}</span>'),
+		'template'	=> $db->escape_string('<br /><span class="smalltext">{$lang->profile_picture_auto_resize_note}</span>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -343,7 +343,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'usercp_profilepic_auto_resize_user',
-		'template'	=> $db->escape_string('<br /><span class="smalltext"><input type="checkbox" name="auto_resize" value="1" checked="checked" id="auto_resize" /> <label for="auto_resize">{$lang->profilepic_auto_resize_option}</label></span>'),
+		'template'	=> $db->escape_string('<br /><span class="smalltext"><input type="checkbox" name="auto_resize" value="1" checked="checked" id="auto_resize" /> <label for="auto_resize">{$lang->profile_picture_auto_resize_option}</label></span>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -408,8 +408,8 @@ x=X',
 		'title'		=> 'usercp_profilepic_description',
 		'template'	=> $db->escape_string('<tr>
 	<td class="trow1" width="40%">
-		<strong>{$lang->profilepic_description}</strong>
-		<br /><span class="smalltext">{$lang->profilepic_description_note}</span>
+		<strong>{$lang->profile_picture_description}</strong>
+		<br /><span class="smalltext">{$lang->profile_picture_description_note}</span>
 	</td>
 	<td class="trow1" width="60%">
 		<input type="text" class="textbox" name="profilepicdescription" size="100" value="{$description}" />
@@ -425,8 +425,8 @@ x=X',
 		'title'		=> 'usercp_profilepic_upload',
 		'template'	=> $db->escape_string('<tr>
 	<td class="trow1" width="40%">
-		<strong>{$lang->profilepic_upload}</strong>
-		<br /><span class="smalltext">{$lang->profilepic_upload_note}</span>
+		<strong>{$lang->profile_picture_upload}</strong>
+		<br /><span class="smalltext">{$lang->profile_picture_upload_note}</span>
 	</td>
 	<td class="trow1" width="60%">
 		<input type="file" name="profilepictureupload" size="25" class="fileupload" />
@@ -441,7 +441,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'usercp_nav_profilepic',
-		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepic.png\') no-repeat left center;">{$lang->ucp_nav_change_profilepicture}</a></div>'),
+		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepic.png\') no-repeat left center;">{$lang->ucp_nav_change_profile_picture}</a></div>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -460,7 +460,7 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'modcp_editprofile_profilepic_description',
 		'template'	=> $db->escape_string('<tr>
-<td colspan="3"><span class="smalltext">{$lang->profilepic_description}</span></td>
+<td colspan="3"><span class="smalltext">{$lang->profile_picture_description}</span></td>
 </tr>
 <tr>
 <td colspan="3"><textarea name="profilepicdescription" id="profilepicdescription" rows="4" cols="30">{$user[\'profilepicdescription\']}</textarea></td>
@@ -704,7 +704,7 @@ function profilepic_run()
 
 		if(empty($profilepicture_error))
 		{
-			redirect("usercp.php?action=profilepic", $lang->redirect_profilepicupdated);
+			redirect("usercp.php?action=profilepic", $lang->redirect_profile_picture_updated);
 		}
 		else
 		{
@@ -716,7 +716,7 @@ function profilepic_run()
 	if($mybb->input['action'] == "profilepic")
 	{
 		add_breadcrumb($lang->nav_usercp, "usercp.php");
-		add_breadcrumb($lang->change_profilepicture, "usercp.php?action=profilepic");
+		add_breadcrumb($lang->change_profile_picture, "usercp.php?action=profilepic");
 
 		// Show main profile picture page
 		if($mybb->usergroup['canuseprofilepic'] == 0)
@@ -728,11 +728,11 @@ function profilepic_run()
 
 		if($mybb->user['profilepictype'] == "upload" || stristr($mybb->user['profilepic'], $mybb->settings['profilepicuploadpath']))
 		{
-			$profilepicmsg = "<br /><strong>".$lang->already_uploaded_profilepic."</strong>";
+			$profilepicmsg = "<br /><strong>".$lang->already_uploaded_profile_picture."</strong>";
 		}
 		elseif($mybb->user['profilepictype'] == "remote" || my_strpos(my_strtolower($mybb->user['profilepic']), "http://") !== false)
 		{
-			$profilepicmsg = "<br /><strong>".$lang->using_remote_profilepic."</strong>";
+			$profilepicmsg = "<br /><strong>".$lang->using_remote_profile_picture."</strong>";
 			$profilepicurl = htmlspecialchars_uni($mybb->user['profilepic']);
 		}
 
@@ -745,12 +745,12 @@ function profilepic_run()
 		if($mybb->usergroup['profilepicmaxdimensions'] != "")
 		{
 			list($maxwidth, $maxheight) = explode("x", my_strtolower($mybb->usergroup['profilepicmaxdimensions']));
-			$lang->profilepic_note .= "<br />".$lang->sprintf($lang->profilepic_note_dimensions, $maxwidth, $maxheight);
+			$lang->profile_picture_note .= "<br />".$lang->sprintf($lang->profile_picture_note_dimensions, $maxwidth, $maxheight);
 		}
 		if($mybb->usergroup['profilepicmaxsize'])
 		{
 			$maxsize = get_friendly_size($mybb->usergroup['profilepicmaxsize']*1024);
-			$lang->profilepic_note .= "<br />".$lang->sprintf($lang->profilepic_note_size, $maxsize);
+			$lang->profile_picture_note .= "<br />".$lang->sprintf($lang->profile_picture_note_size, $maxsize);
 		}
 
 		$auto_resize = '';
