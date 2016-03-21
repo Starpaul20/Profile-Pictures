@@ -371,13 +371,13 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'member_profile_profilepic',
 		'template'	=> $db->escape_string('<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
-<tr>
-<td class="thead"><strong>{$lang->users_profile_picture}</strong></td>
-</tr>
-<tr>
-<td class="trow1" align="center">{$profilepic_img}<br />
-{$description}</td>
-</tr>
+	<tr>
+		<td class="thead"><strong>{$lang->users_profile_picture}</strong></td>
+	</tr>
+	<tr>
+		<td class="trow1" align="center">{$profilepic_img}<br />
+		{$description}</td>
+	</tr>
 </table>
 <br />'),
 		'sid'		=> '-1',
@@ -460,10 +460,10 @@ x=X',
 	$insert_array = array(
 		'title'		=> 'modcp_editprofile_profilepic_description',
 		'template'	=> $db->escape_string('<tr>
-<td colspan="3"><span class="smalltext">{$lang->profile_picture_description}</span></td>
+	<td colspan="3"><span class="smalltext">{$lang->profile_picture_description}</span></td>
 </tr>
 <tr>
-<td colspan="3"><textarea name="profilepicdescription" id="profilepicdescription" rows="4" cols="30">{$user[\'profilepicdescription\']}</textarea></td>
+	<td colspan="3"><textarea name="profilepicdescription" id="profilepicdescription" rows="4" cols="30">{$user[\'profilepicdescription\']}</textarea></td>
 </tr>'),
 		'sid'		=> '-1',
 		'version'	=> '',
