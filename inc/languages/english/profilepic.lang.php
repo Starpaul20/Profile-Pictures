@@ -39,11 +39,11 @@ $l['profile_picture_note'] = "A profile picture is a small identifying image sho
 $l['profile_picture_note_dimensions'] = "The maximum dimensions for profile pictures are: {1}x{2} pixels.";
 $l['profile_picture_note_size'] = "The maximum file size for profile pictures is {1}.";
 $l['custom_profile_picture'] = "Custom Profile Picture";
-$l['already_uploaded_profile_picture'] = "You are currently using an uploaded profile picture. If you upload another one, your old one will be deleted.";
+$l['already_uploaded_profile_picture'] = "You are currently using an uploaded profile picture. If you choose to use another one, your old profile picture will be deleted from the server.";
 $l['profile_picture_auto_resize_note'] = "If your profile picture is too large, it will automatically be resized.";
 $l['profile_picture_auto_resize_option'] = "Try to resize my profile picture if it is too large.";
 $l['redirect_profile_picture_updated'] = "Your profile picture has been changed successfully.<br />You will now be returned to your User CP.";
-$l['using_remote_profile_picture'] = "You are currently using an remote profile picture.";
+$l['using_remote_profile_picture'] = "You are currently using a profile picture from a remote site. If you choose to use another one, your old profile picture URL will be emptied.";
 $l['profile_picture_mine'] = "This is your Profile Picture";
 
 $l['error_uploadfailed'] = "The file upload failed. Please choose a valid file and try again. ";
