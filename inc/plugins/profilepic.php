@@ -1001,7 +1001,7 @@ function profilepic_user_graph()
 	$table->construct_cell($lang->profile_picture_desc."{$remove_profilepicture}<br /><small>{$max_size}</small>");
 	$table->construct_row();
 
-	$table->output($lang->profile_picture.": {$user['username']}");
+	$table->output($lang->profile_picture.": ".htmlspecialchars_uni($user['username']));
 
 	// Custom profile picture
 	if($mybb->settings['profilepicresizing'] == "auto")
