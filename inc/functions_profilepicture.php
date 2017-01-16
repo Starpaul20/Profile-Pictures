@@ -225,6 +225,12 @@ function format_profile_picture($profilepicture, $dimensions = '', $max_dimensio
 		$profilepictures = array();
 	}
 
+	if(my_strpos($profilepicture, '://') !== false && !$mybb->settings['allowremoteprofilepictures'])
+	{
+		// Remote profile picture, but remote profile pictures are disallowed.
+		$profilepicture = null;
+	}
+
 	if(!$profilepicture)
 	{
 		// Default profile picture

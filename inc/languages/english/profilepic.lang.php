@@ -53,7 +53,9 @@ $l['error_profilepicturetoobig'] = "Sorry, but we cannot change your profile pic
 $l['error_profilepictureresizefailed'] = "Your profile picture was unable to be resized so that it is within the required dimensions.";
 $l['error_profilepictureuserresize'] = "You can also try checking the 'attempt to resize my profile picture' check box and uploading the same image again.";
 $l['error_uploadsize'] = "The size of the uploaded file is too large.";
+$l['error_remote_profile_picture_not_allowed'] = "Remote profile picture URLs have been disabled by the forum administrator.";
 $l['error_descriptiontoobig'] = "Your profile picture description is too long. The maximum length for descriptions is 255 characters.";
+$l['remote_profile_picture_disabled'] = "You are currently using a remote profile picture, which has been disabled. Your profile picture has been hidden.";
 
 $l['current_profile_picture'] = "Current Profile Picture";
 $l['remove_profile_picture_admin'] = "Remove current profile picture?";
