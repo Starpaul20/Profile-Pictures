@@ -763,9 +763,7 @@ function profilepic_run()
 		{
 			$profilepicture_error = $lang->error_remote_profile_picture_not_allowed;
 		}
-/*
 
-*/
 		if(empty($profilepicture_error))
 		{
 			redirect("usercp.php?action=profilepic", $lang->redirect_profile_picture_updated);
