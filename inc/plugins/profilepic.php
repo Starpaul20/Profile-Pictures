@@ -792,7 +792,7 @@ function profilepic_run()
 		{
 			$profilepicmsg = "<br /><strong>".$lang->already_uploaded_profile_picture."</strong>";
 		}
-		elseif($mybb->user['profilepictype'] == "remote" || my_strpos(my_strtolower($mybb->user['profilepic']), "http://") !== false)
+		elseif($mybb->user['profilepictype'] == "remote" || my_validate_url($mybb->user['profilepic']))
 		{
 			$profilepicmsg = "<br /><strong>".$lang->using_remote_profile_picture."</strong>";
 			$profilepicurl = htmlspecialchars_uni($mybb->user['profilepic']);
@@ -1003,7 +1003,7 @@ function profilepic_user_graph()
 				"height" => 200
 			);
 		}
-		if(my_substr($user['profilepic'], 0, 7) !== 'http://' && my_substr($user['profilepic'], 0, 8) !== 'https://')
+		if(!my_validate_url($user['profilepic']))
 		{
 			$user['profilepic'] = "../{$user['profilepic']}\n";
 		}
@@ -1029,7 +1029,7 @@ function profilepic_user_graph()
 	{
 		$current_profile_picture_msg = "<br /><strong>{$lang->user_current_using_uploaded_profile_picture}</strong>";
 	}
-	elseif($user['profilepictype'] == "remote" || my_strpos(my_strtolower($user['profilepic']), "http://") !== false)
+	elseif($user['profilepictype'] == "remote" || my_validate_url($user['profilepic']))
 	{
 		$current_profile_picture_msg = "<br /><strong>{$lang->user_current_using_remote_profile_picture}</strong>";
 		$profilepicture_url = $user['profilepic'];
