@@ -20,7 +20,7 @@ $l['profile_picture_upload_dir'] = "Profile Picture Uploads Directory";
 
 // Front end
 $l['users_profile_picture'] = "{1}'s Profile Picture";
-$l['changing_profile_picture'] = "<a href=\"usercp.php?action=profilepic\">Changing Profile Picture</a>";
+$l['changing_profile_picture'] = "Changing Profile Picture";
 $l['remove_profile_picture'] = "Remove user's profile picture?";
 
 $l['nav_usercp'] = "User Control Panel";

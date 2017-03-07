@@ -319,7 +319,7 @@ x=X',
 		</table>
 		<br />
 		<div align="center">
-			<input type="hidden" name="action" value="do_profilepic" />
+			<input type="hidden" name="action" value="do_profilepicture" />
 			<input type="submit" class="button" name="submit" value="{$lang->change_picture}" />
 			{$removeprofilepicture}
 		</div>
@@ -463,7 +463,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'usercp_nav_profilepic',
-		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepic" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepic.png\') no-repeat left center;">{$lang->ucp_nav_change_profile_picture}</a></div>'),
+		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepicture" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepicture.png\') no-repeat left center;">{$lang->ucp_nav_change_profile_picture}</a></div>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -495,7 +495,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'global_remote_profile_picture_notice',
-		'template'	=> $db->escape_string('<div class="red_alert"><a href="{$mybb->settings[\'bburl\']}/usercp.php?action=profilepic">{$lang->remote_profile_picture_disabled}</a></div>'),
+		'template'	=> $db->escape_string('<div class="red_alert"><a href="{$mybb->settings[\'bburl\']}/usercp.php?action=profilepicture">{$lang->remote_profile_picture_disabled}</a></div>'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -572,7 +572,7 @@ function profilepic_run()
 	$lang->load("profilepic");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
-	if($mybb->input['action'] == "do_profilepic" && $mybb->request_method == "post")
+	if($mybb->input['action'] == "do_profilepicture" && $mybb->request_method == "post")
 	{
 		// Verify incoming POST request
 		verify_post_check($mybb->get_input('my_post_key'));
@@ -766,19 +766,19 @@ function profilepic_run()
 
 		if(empty($profilepicture_error))
 		{
-			redirect("usercp.php?action=profilepic", $lang->redirect_profile_picture_updated);
+			redirect("usercp.php?action=profilepicture", $lang->redirect_profile_picture_updated);
 		}
 		else
 		{
-			$mybb->input['action'] = "profilepic";
+			$mybb->input['action'] = "profilepicture";
 			$profilepicture_error = inline_error($profilepicture_error);
 		}
 	}
 
-	if($mybb->input['action'] == "profilepic")
+	if($mybb->input['action'] == "profilepicture")
 	{
 		add_breadcrumb($lang->nav_usercp, "usercp.php");
-		add_breadcrumb($lang->change_profile_picture, "usercp.php?action=profilepic");
+		add_breadcrumb($lang->change_profile_picture, "usercp.php?action=profilepicture");
 
 		// Show main profile picture page
 		if($mybb->usergroup['canuseprofilepic'] == 0)
@@ -891,7 +891,7 @@ function profilepic_profile()
 function profilepic_online_activity($user_activity)
 {
 	global $user;
-	if(my_strpos($user['location'], "usercp.php?action=profilepic") !== false)
+	if(my_strpos($user['location'], "usercp.php?action=profilepicture") !== false)
 	{
 		$user_activity['activity'] = "usercp_profilepic";
 	}
