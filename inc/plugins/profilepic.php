@@ -798,7 +798,7 @@ function profilepic_run()
 			$profilepicurl = htmlspecialchars_uni($mybb->user['profilepic']);
 		}
 
-		if(!empty($mybb->user['profilepic']) && (($mybb->user['profilepictype'] === 'remote' || $mybb->user['profilepictype'] === 'gravatar') && $mybb->settings['allowremoteprofilepictures'] == 1))
+		if(!empty($mybb->user['profilepic']) && ((($mybb->user['profilepictype'] == 'remote' || $mybb->user['profilepictype'] == 'gravatar') && $mybb->settings['allowremoteprofilepictures'] == 1) || $mybb->user['profilepictype'] == "upload"))
 		{
 			$userprofilepicture = format_profile_picture(htmlspecialchars_uni($mybb->user['profilepic']), $mybb->user['profilepicdimensions'], '200x200');
 			eval("\$currentprofilepic = \"".$templates->get("usercp_profilepic_current")."\";");
@@ -871,7 +871,7 @@ function profilepic_profile()
 	$lang->users_profile_picture = $lang->sprintf($lang->users_profile_picture, $memprofile['username']);
 
 	$profilepic = $profilepic_img = '';
-	if($memprofile['profilepic'] && (($memprofile['profilepictype'] === 'remote' || $memprofile['profilepictype'] === 'gravatar') && $mybb->settings['allowremoteprofilepictures'] == 1))
+	if($memprofile['profilepic'] && ((($memprofile['profilepictype'] == 'remote' || $memprofile['profilepictype'] == 'gravatar') && $mybb->settings['allowremoteprofilepictures'] == 1) || $memprofile['profilepictype'] == "upload"))
 	{
 		$memprofile['profilepic'] = htmlspecialchars_uni($memprofile['profilepic']);
 		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
