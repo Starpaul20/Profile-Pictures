@@ -44,7 +44,7 @@ function remove_profilepicture($uid, $exclude="")
  *
  * @param srray incoming FILE array, if we have one - otherwise takes $_FILES['profilepictureupload']
  * @param string User ID this profile picture is being uploaded for, if not the current user
- * @return array Array of errors if any, otherwise filename of successful.
+ * @return array Array of errors if any, otherwise filename if successful.
  */
 function upload_profilepicture($profilepicture=array(), $uid=0)
 {
