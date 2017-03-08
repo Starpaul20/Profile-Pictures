@@ -18,7 +18,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'usercp.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'usercp_profilepicture,usercp_profilepicture_auto_resize_auto,usercp_profilepicture_auto_resize_user,usercp_profilepicture_current,usercp_profilepicture_description,usercp_profilepicture_remote,usercp_profilepicture_remove,usercp_profilepicture_upload,usercp_nav_profilepic';
+	$templatelist .= 'usercp_profilepicture,usercp_profilepicture_auto_resize_auto,usercp_profilepicture_auto_resize_user,usercp_profilepicture_current,usercp_profilepicture_description,usercp_profilepicture_remote,usercp_profilepicture_remove,usercp_profilepicture_upload,usercp_nav_profilepicture';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
@@ -28,7 +28,17 @@ if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'usercp_nav_profilepic';
+	$templatelist .= 'usercp_nav_profilepicture';
+}
+
+if(my_strpos($_SERVER['PHP_SELF'], 'usercp2.php'))
+{
+	global $templatelist;
+	if(isset($templatelist))
+	{
+		$templatelist .= ',';
+	}
+	$templatelist .= 'usercp_nav_profilepicture';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
@@ -462,7 +472,7 @@ x=X',
 	$db->insert_query("templates", $insert_array);
 
 	$insert_array = array(
-		'title'		=> 'usercp_nav_profilepic',
+		'title'		=> 'usercp_nav_profilepicture',
 		'template'	=> $db->escape_string('<div><a href="usercp.php?action=profilepicture" class="usercp_nav_item" style="padding-left:40px; background:url(\'images/profilepicture.png\') no-repeat left center;">{$lang->ucp_nav_change_profile_picture}</a></div>'),
 		'sid'		=> '-1',
 		'version'	=> '',
@@ -472,7 +482,7 @@ x=X',
 
 	$insert_array = array(
 		'title'		=> 'modcp_editprofile_profilepicture',
-		'template'	=> $db->escape_string('<tr><td colspan="3"><span class="smalltext"><label><input type="checkbox" class="checkbox" name="remove_profilepicture" value="1" /> {$lang->remove_profile_picture}</label></span></td></tr>{$profilepicdescription}'),
+		'template'	=> $db->escape_string('<tr><td colspan="3"><span class="smalltext"><label><input type="checkbox" class="checkbox" name="remove_profilepicture" value="1" /> {$lang->remove_profile_picture}</label></span></td></tr>{$profilepicturedescription}'),
 		'sid'		=> '-1',
 		'version'	=> '',
 		'dateline'	=> TIME_NOW
@@ -504,7 +514,7 @@ x=X',
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("header", "#".preg_quote('{$bannedwarning}')."#i", '{$remote_profile_picture_notice}{$bannedwarning}');
-	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('{$changesigop}')."#i", '{$changesigop}<!-- profilepic -->');
+	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('{$changesigop}')."#i", '{$changesigop}<!-- profilepicture -->');
 	find_replace_templatesets("member_profile", "#".preg_quote('{$profilefields}')."#i", '{$profilefields}{$profilepicture}');
 	find_replace_templatesets("modcp_editprofile", "#".preg_quote('{$lang->remove_avatar}</label></span></td>
 										</tr>')."#i", '{$lang->remove_avatar}</label></span></td>
@@ -517,13 +527,13 @@ function profilepic_deactivate()
 	global $db;
 	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating','allowremoteprofilepictures')");
 	$db->delete_query("settinggroups", "name IN('profilepic')");
-	$db->delete_query("templates", "title IN('usercp_profilepicture','usercp_profilepicture_auto_resize_auto','usercp_profilepicture_auto_resize_user','usercp_profilepicture_current','member_profile_profilepicture','member_profile_profilepicture_description','member_profile_profilepicture_profilepicture','usercp_profilepicture_description','usercp_profilepicture_remote','usercp_profilepicture_remove','usercp_profilepicture_upload','usercp_nav_profilepic','modcp_editprofile_profilepicture','modcp_editprofile_profilepicture_description','global_remote_profile_picture_notice')");
+	$db->delete_query("templates", "title IN('usercp_profilepicture','usercp_profilepicture_auto_resize_auto','usercp_profilepicture_auto_resize_user','usercp_profilepicture_current','member_profile_profilepicture','member_profile_profilepicture_description','member_profile_profilepicture_profilepicture','usercp_profilepicture_description','usercp_profilepicture_remote','usercp_profilepicture_remove','usercp_profilepicture_upload','usercp_nav_profilepicture','modcp_editprofile_profilepicture','modcp_editprofile_profilepicture_description','global_remote_profile_picture_notice')");
 	rebuild_settings();
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("header", "#".preg_quote('{$remote_profile_picture_notice}')."#i", '', 0);
 	find_replace_templatesets("member_profile", "#".preg_quote('{$profilepicture}')."#i", '', 0);
-	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('<!-- profilepic -->')."#i", '', 0);
+	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('<!-- profilepicture -->')."#i", '', 0);
 	find_replace_templatesets("modcp_editprofile", "#".preg_quote('{$profilepicture}')."#i", '', 0);
 }
 
@@ -535,8 +545,8 @@ function profilepic_nav()
 
 	if($mybb->usergroup['canuseprofilepic'] == 1)
 	{
-		eval("\$profilepic_nav = \"".$templates->get("usercp_nav_profilepic")."\";");
-		$usercpnav = str_replace("<!-- profilepic -->", $profilepic_nav, $usercpnav);
+		eval("\$profilepicture_nav = \"".$templates->get("usercp_nav_profilepicture")."\";");
+		$usercpnav = str_replace("<!-- profilepicture -->", $profilepicture_nav, $usercpnav);
 	}
 }
 
@@ -893,7 +903,7 @@ function profilepic_online_activity($user_activity)
 	global $user;
 	if(my_strpos($user['location'], "usercp.php?action=profilepicture") !== false)
 	{
-		$user_activity['activity'] = "usercp_profilepic";
+		$user_activity['activity'] = "usercp_profilepicture";
 	}
 
 	return $user_activity;
@@ -904,7 +914,7 @@ function profilepic_online_location($plugin_array)
 	global $lang;
 	$lang->load("profilepic");
 
-	if($plugin_array['user_activity']['activity'] == "usercp_profilepic")
+	if($plugin_array['user_activity']['activity'] == "usercp_profilepicture")
 	{
 		$plugin_array['location_name'] = $lang->changing_profile_picture;
 	}
@@ -950,7 +960,7 @@ function profilepic_removal_lang()
 
 	if($mybb->settings['profilepicdescription'] == 1)
 	{
-		eval("\$profilepicdescription = \"".$templates->get("modcp_editprofile_profilepicture_description")."\";");
+		eval("\$profilepicturedescription = \"".$templates->get("modcp_editprofile_profilepicture_description")."\";");
 	}
 
 	eval("\$profilepicture = \"".$templates->get("modcp_editprofile_profilepicture")."\";");
