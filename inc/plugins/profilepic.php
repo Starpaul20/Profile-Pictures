@@ -84,7 +84,7 @@ $plugins->add_hook("admin_tools_system_health_output_chmod_list", "profilepic_ch
 function profilepic_info()
 {
 	global $lang;
-	$lang->load("profilepic", true);
+	$lang->load("profilepicture", true);
 
 	return array(
 		"name"				=> $lang->profilepic_info_name,
@@ -541,7 +541,7 @@ function profilepic_deactivate()
 function profilepic_nav()
 {
 	global $mybb, $lang, $templates, $usercpnav;
-	$lang->load("profilepic");
+	$lang->load("profilepicture");
 
 	if($mybb->usergroup['canuseprofilepic'] == 1)
 	{
@@ -566,7 +566,7 @@ function profilepic_header_cache()
 function profilepic_header()
 {
 	global $mybb, $templates, $lang, $remote_profile_picture_notice;
-	$lang->load("profilepic");
+	$lang->load("profilepicture");
 
 	$remote_profile_picture_notice = '';
 	if(($mybb->user['profilepictype'] === 'remote' || $mybb->user['profilepictype'] === 'gravatar') && !$mybb->settings['allowremoteprofilepictures'])
@@ -579,7 +579,7 @@ function profilepic_header()
 function profilepic_run()
 {
 	global $db, $mybb, $lang, $templates, $theme, $headerinclude, $usercpnav, $header, $footer;
-	$lang->load("profilepic");
+	$lang->load("profilepicture");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
 	if($mybb->input['action'] == "do_profilepicture" && $mybb->request_method == "post")
@@ -694,7 +694,7 @@ function profilepic_run()
 				$file = fetch_remote_file($mybb->input['profilepictureurl']);
 				if(!$file)
 				{
-					$profilepicture_error = $lang->error_invalidprofilepicurl;
+					$profilepicture_error = $lang->error_invalidprofilepictureurl;
 				}
 				else
 				{
@@ -702,7 +702,7 @@ function profilepic_run()
 					$fp = @fopen($tmp_name, "wb");
 					if(!$fp)
 					{
-						$profilepicture_error = $lang->error_invalidprofilepicurl;
+						$profilepicture_error = $lang->error_invalidprofilepictureurl;
 					}
 					else
 					{
@@ -712,7 +712,7 @@ function profilepic_run()
 						@unlink($tmp_name);
 						if(!$type)
 						{
-							$profilepicture_error = $lang->error_invalidprofilepicurl;
+							$profilepicture_error = $lang->error_invalidprofilepictureurl;
 						}
 					}
 				}
@@ -875,7 +875,7 @@ function profilepic_run()
 function profilepic_profile()
 {
 	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepicture, $description;
-	$lang->load("profilepic");
+	$lang->load("profilepicture");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
 	$lang->users_profile_picture = $lang->sprintf($lang->users_profile_picture, $memprofile['username']);
@@ -912,7 +912,7 @@ function profilepic_online_activity($user_activity)
 function profilepic_online_location($plugin_array)
 {
 	global $lang;
-	$lang->load("profilepic");
+	$lang->load("profilepicture");
 
 	if($plugin_array['user_activity']['activity'] == "usercp_profilepicture")
 	{
@@ -954,7 +954,7 @@ function profilepic_removal()
 function profilepic_removal_lang()
 {
 	global $mybb, $lang, $user, $templates, $profilepicturedescription, $profilepicture;
-	$lang->load("profilepic");
+	$lang->load("profilepicture");
 
 	$user['profilepicdescription'] = htmlspecialchars_uni($user['profilepicdescription']);
 
@@ -986,7 +986,7 @@ function profilepic_user_delete($delete)
 function profilepic_user_options($tabs)
 {
 	global $lang;
-	$lang->load("profilepic", true);
+	$lang->load("profilepicture", true);
 
 	$tabs['profilepicture'] = $lang->profile_picture;
 	return $tabs;
@@ -995,7 +995,7 @@ function profilepic_user_options($tabs)
 function profilepic_user_graph()
 {
 	global $lang, $form, $mybb, $user;
-	$lang->load("profilepic", true);
+	$lang->load("profilepicture", true);
 
 	$profile_picture_dimensions = explode("|", $user['profilepicdimensions']);
 	if($user['profilepic'] && (my_strpos($user['profilepic'], '://') === false || $mybb->settings['allowremoteprofilepictures']))
@@ -1181,7 +1181,7 @@ function profilepic_user_commit()
 				$file = fetch_remote_file($mybb->input['profilepicture_url']);
 				if(!$file)
 				{
-					$profilepicture_error = $lang->error_invalidprofilepicurl;
+					$profilepicture_error = $lang->error_invalidprofilepictureurl;
 				}
 				else
 				{
@@ -1189,7 +1189,7 @@ function profilepic_user_commit()
 					$fp = @fopen($tmp_name, "wb");
 					if(!$fp)
 					{
-						$profilepicture_error = $lang->error_invalidprofilepicurl;
+						$profilepicture_error = $lang->error_invalidprofilepictureurl;
 					}
 					else
 					{
@@ -1200,7 +1200,7 @@ function profilepic_user_commit()
 						echo $type;
 						if(!$type)
 						{
-							$profilepicture_error = $lang->error_invalidprofilepicurl;
+							$profilepicture_error = $lang->error_invalidprofilepictureurl;
 						}
 					}
 				}
@@ -1253,7 +1253,7 @@ function profilepic_user_commit()
 function profilepic_usergroup_permission()
 {
 	global $mybb, $lang, $form, $form_container, $run_module;
-	$lang->load("profilepic", true);
+	$lang->load("profilepicture", true);
 
 	if($run_module == 'user' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc)
 	{
@@ -1280,7 +1280,7 @@ function profilepic_usergroup_permission_commit()
 function profilepic_chmod()
 {
 	global $mybb, $lang, $table, $message_profile_picture;
-	$lang->load("profilepic", true);
+	$lang->load("profilepicture", true);
 
 	if(is_writable('../'.$mybb->settings['profilepicuploadpath']))
 	{

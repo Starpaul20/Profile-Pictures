@@ -48,7 +48,7 @@ $l['profile_picture_mine'] = "This is your Profile Picture";
 
 $l['error_uploadfailed'] = "The file upload failed. Please choose a valid file and try again. ";
 $l['error_profilepicturetype'] = "Invalid file type. An uploaded profile picture must be in GIF, JPEG, BMP or PNG format.";
-$l['error_invalidprofilepicurl'] = "The URL you entered for your profile picture does not appear to be valid. Please ensure you enter a valid URL.";
+$l['error_invalidprofilepictureurl'] = "The URL you entered for your profile picture does not appear to be valid. Please ensure you enter a valid URL.";
 $l['error_profilepicturetoobig'] = "Sorry, but we cannot change your profile picture as the new picture you specified is too big. The maximum dimensions are {1}x{2} (width x height)";
 $l['error_profilepictureresizefailed'] = "Your profile picture was unable to be resized so that it is within the required dimensions.";
 $l['error_profilepictureuserresize'] = "You can also try checking the 'attempt to resize my profile picture' check box and uploading the same image again.";
