@@ -38,7 +38,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
 	{
 		$templatelist .= ',';
 	}
-	$templatelist .= 'member_profile_profilepic,member_profile_profilepic_description,member_profile_profilepic_profilepic';
+	$templatelist .= 'member_profile_profilepicture,member_profile_profilepicture_description,member_profile_profilepicture_profilepicture';
 }
 
 if(my_strpos($_SERVER['PHP_SELF'], 'modcp.php'))
@@ -391,13 +391,13 @@ x=X',
 	$db->insert_query("templates", $insert_array);
 
 	$insert_array = array(
-		'title'		=> 'member_profile_profilepic',
+		'title'		=> 'member_profile_profilepicture',
 		'template'	=> $db->escape_string('<table border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}" class="tborder">
 	<tr>
 		<td class="thead"><strong>{$lang->users_profile_picture}</strong></td>
 	</tr>
 	<tr>
-		<td class="trow1" align="center">{$profilepic_img}<br />
+		<td class="trow1" align="center">{$profilepicture_img}<br />
 		{$description}</td>
 	</tr>
 </table>
@@ -409,7 +409,7 @@ x=X',
 	$db->insert_query("templates", $insert_array);
 
 	$insert_array = array(
-		'title'		=> 'member_profile_profilepic_description',
+		'title'		=> 'member_profile_profilepicture_description',
 		'template'	=> $db->escape_string('<span class="smalltext"><em>{$memprofile[\'profilepicdescription\']}</em></span>'),
 		'sid'		=> '-1',
 		'version'	=> '',
@@ -418,7 +418,7 @@ x=X',
 	$db->insert_query("templates", $insert_array);
 
 	$insert_array = array(
-		'title'		=> 'member_profile_profilepic_profilepic',
+		'title'		=> 'member_profile_profilepicture_profilepicture',
 		'template'	=> $db->escape_string('<img src="{$userprofilepicture[\'image\']}" alt="" {$userprofilepicture[\'width_height\']} />'),
 		'sid'		=> '-1',
 		'version'	=> '',
@@ -505,7 +505,7 @@ x=X',
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("header", "#".preg_quote('{$bannedwarning}')."#i", '{$remote_profile_picture_notice}{$bannedwarning}');
 	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('{$changesigop}')."#i", '{$changesigop}<!-- profilepic -->');
-	find_replace_templatesets("member_profile", "#".preg_quote('{$profilefields}')."#i", '{$profilefields}{$profilepic}');
+	find_replace_templatesets("member_profile", "#".preg_quote('{$profilefields}')."#i", '{$profilefields}{$profilepicture}');
 	find_replace_templatesets("modcp_editprofile", "#".preg_quote('{$lang->remove_avatar}</label></span></td>
 										</tr>')."#i", '{$lang->remove_avatar}</label></span></td>
 										</tr>{$profilepic}');
@@ -517,12 +517,12 @@ function profilepic_deactivate()
 	global $db;
 	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating','allowremoteprofilepictures')");
 	$db->delete_query("settinggroups", "name IN('profilepic')");
-	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_auto_resize_auto','usercp_profilepic_auto_resize_user','usercp_profilepic_current','member_profile_profilepic','member_profile_profilepic_description','member_profile_profilepic_profilepic','usercp_profilepic_description','usercp_profilepic_remote','usercp_profilepic_remove','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description','global_remote_profile_picture_notice')");
+	$db->delete_query("templates", "title IN('usercp_profilepic','usercp_profilepic_auto_resize_auto','usercp_profilepic_auto_resize_user','usercp_profilepic_current','member_profile_profilepicture','member_profile_profilepicture_description','member_profile_profilepicture_profilepicture','usercp_profilepic_description','usercp_profilepic_remote','usercp_profilepic_remove','usercp_profilepic_upload','usercp_nav_profilepic','modcp_editprofile_profilepic','modcp_editprofile_profilepic_description','global_remote_profile_picture_notice')");
 	rebuild_settings();
 
 	include MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("header", "#".preg_quote('{$remote_profile_picture_notice}')."#i", '', 0);
-	find_replace_templatesets("member_profile", "#".preg_quote('{$profilepic}')."#i", '', 0);
+	find_replace_templatesets("member_profile", "#".preg_quote('{$profilepicture}')."#i", '', 0);
 	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('<!-- profilepic -->')."#i", '', 0);
 	find_replace_templatesets("modcp_editprofile", "#".preg_quote('{$profilepic}')."#i", '', 0);
 }
@@ -864,26 +864,26 @@ function profilepic_run()
 // Profile Picture display in profile
 function profilepic_profile()
 {
-	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepic, $description;
+	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepicture, $description;
 	$lang->load("profilepic");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
 	$lang->users_profile_picture = $lang->sprintf($lang->users_profile_picture, $memprofile['username']);
 
-	$profilepic = $profilepic_img = '';
+	$profilepicture = $profilepicture_img = '';
 	if($memprofile['profilepic'] && ((($memprofile['profilepictype'] == 'remote' || $memprofile['profilepictype'] == 'gravatar') && $mybb->settings['allowremoteprofilepictures'] == 1) || $memprofile['profilepictype'] == "upload"))
 	{
 		$memprofile['profilepic'] = htmlspecialchars_uni($memprofile['profilepic']);
 		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
-		eval("\$profilepic_img = \"".$templates->get("member_profile_profilepic_profilepic")."\";");
+		eval("\$profilepicture_img = \"".$templates->get("member_profile_profilepicture_profilepicture")."\";");
 
 		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicdescription'] == 1)
 		{
 			$memprofile['profilepicdescription'] = htmlspecialchars_uni($memprofile['profilepicdescription']);
-			eval("\$description = \"".$templates->get("member_profile_profilepic_description")."\";");
+			eval("\$description = \"".$templates->get("member_profile_profilepicture_description")."\";");
 		}
 
-		eval("\$profilepic = \"".$templates->get("member_profile_profilepic")."\";");
+		eval("\$profilepicture = \"".$templates->get("member_profile_profilepicture")."\";");
 	}
 }
 
