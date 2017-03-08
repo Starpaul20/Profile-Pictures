@@ -16,11 +16,11 @@ function remove_profilepicture($uid, $exclude="")
 
 	if(defined('IN_ADMINCP'))
 	{
-		$profilepicturepath = '../'.$mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = '../'.$mybb->settings['profilepictureuploadpath'];
 	}
 	else
 	{
-		$profilepicturepath = $mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = $mybb->settings['profilepictureuploadpath'];
 	}
 
 	$dir = opendir($profilepicturepath);
@@ -79,12 +79,12 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 
 	if(defined('IN_ADMINCP'))
 	{
-		$profilepicturepath = '../'.$mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = '../'.$mybb->settings['profilepictureuploadpath'];
 		$lang->load("messages", true);
 	}
 	else
 	{
-		$profilepicturepath = $mybb->settings['profilepicuploadpath'];
+		$profilepicturepath = $mybb->settings['profilepictureuploadpath'];
 	}
 
 	$filename = "profilepic_".$uid.".".$ext;
@@ -120,7 +120,7 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 		if(($maxwidth && $img_dimensions[0] > $maxwidth) || ($maxheight && $img_dimensions[1] > $maxheight))
 		{
 			// Automatic resizing enabled?
-			if($mybb->settings['profilepicresizing'] == "auto" || ($mybb->settings['profilepicresizing'] == "user" && $mybb->input['auto_resize'] == 1))
+			if($mybb->settings['profilepictureresizing'] == "auto" || ($mybb->settings['profilepictureresizing'] == "user" && $mybb->input['auto_resize'] == 1))
 			{
 				require_once MYBB_ROOT."inc/functions_image.php";
 				$thumbnail = generate_thumbnail($profilepicturepath."/".$filename, $profilepicturepath, $filename, $maxheight, $maxwidth);
@@ -144,7 +144,7 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 			else
 			{
 				$ret['error'] = $lang->sprintf($lang->error_profilepicturetoobig, $maxwidth, $maxheight);
-				if($mybb->settings['profilepicresizing'] == "user")
+				if($mybb->settings['profilepictureresizing'] == "user")
 				{
 					$ret['error'] .= "<br /><br />".$lang->error_profilepictureuserresize;
 				}
@@ -199,7 +199,7 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 	remove_profilepicture($uid, $filename);
 
 	$ret = array(
-		"profilepic" => $mybb->settings['profilepicuploadpath']."/".$filename,
+		"profilepicture" => $mybb->settings['profilepictureuploadpath']."/".$filename,
 		"width" => (int)$img_dimensions[0],
 		"height" => (int)$img_dimensions[1]
 	);

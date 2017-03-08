@@ -210,7 +210,7 @@ function profilepic_activate()
 
 	// Insert settings
 	$insertarray = array(
-		'name' => 'profilepic',
+		'name' => 'profilepicture',
 		'title' => 'Profile Picture Settings',
 		'description' => 'Various option related to profile pictures can be managed and set here.',
 		'disporder' => 42,
@@ -219,7 +219,7 @@ function profilepic_activate()
 	$gid = $db->insert_query("settinggroups", $insertarray);
 
 	$insertarray = array(
-		'name' => 'profilepicuploadpath',
+		'name' => 'profilepictureuploadpath',
 		'title' => 'Profile Picture Upload Path',
 		'description' => 'This is the path where profile pictures will be uploaded to. This directory <strong>must be chmod 777</strong> (writable) for uploads to work.',
 		'optionscode' => 'text',
@@ -230,7 +230,7 @@ function profilepic_activate()
 	$db->insert_query("settings", $insertarray);
 
 	$insertarray = array(
-		'name' => 'profilepicresizing',
+		'name' => 'profilepictureresizing',
 		'title' => 'Profile Picture Resizing Mode',
 		'description' => 'If you wish to automatically resize all large profile pictures, provide users the option of resizing their profile picture, or not resize profile pictures at all you can change this setting.',
 		'optionscode' => 'select
@@ -244,7 +244,7 @@ disabled=Disable this feature',
 	$db->insert_query("settings", $insertarray);
 
 	$insertarray = array(
-		'name' => 'profilepicdescription',
+		'name' => 'profilepicturedescription',
 		'title' => 'Profile Picture Description',
 		'description' => 'If you wish allow your users to enter an optional description for their profile picture, set this option to yes.',
 		'optionscode' => 'yesno',
@@ -525,8 +525,8 @@ x=X',
 function profilepic_deactivate()
 {
 	global $db;
-	$db->delete_query("settings", "name IN('profilepicuploadpath','profilepicresizing','profilepicdescription','userprofilepicturerating','allowremoteprofilepictures')");
-	$db->delete_query("settinggroups", "name IN('profilepic')");
+	$db->delete_query("settings", "name IN('profilepictureuploadpath','profilepictureresizing','profilepicturedescription','userprofilepicturerating','allowremoteprofilepictures')");
+	$db->delete_query("settinggroups", "name IN('profilepicture')");
 	$db->delete_query("templates", "title IN('usercp_profilepicture','usercp_profilepicture_auto_resize_auto','usercp_profilepicture_auto_resize_user','usercp_profilepicture_current','member_profile_profilepicture','member_profile_profilepicture_description','member_profile_profilepicture_profilepicture','usercp_profilepicture_description','usercp_profilepicture_remote','usercp_profilepicture_remove','usercp_profilepicture_upload','usercp_nav_profilepicture','modcp_editprofile_profilepicture','modcp_editprofile_profilepicture_description','global_remote_profile_picture_notice')");
 	rebuild_settings();
 
@@ -630,7 +630,7 @@ function profilepic_run()
 					$profilepic_dimensions = $profilepicture['width']."|".$profilepicture['height'];
 				}
 				$updated_profilepicture = array(
-					"profilepic" => $profilepicture['profilepic'].'?dateline='.TIME_NOW,
+					"profilepic" => $profilepicture['profilepicture'].'?dateline='.TIME_NOW,
 					"profilepicdimensions" => $profilepic_dimensions,
 					"profilepictype" => "upload",
 					"profilepicdescription" => $db->escape_string($mybb->input['profilepicturedescription'])
@@ -698,7 +698,7 @@ function profilepic_run()
 				}
 				else
 				{
-					$tmp_name = $mybb->settings['profilepicuploadpath']."/remote_".md5(random_str());
+					$tmp_name = $mybb->settings['profilepictureuploadpath']."/remote_".md5(random_str());
 					$fp = @fopen($tmp_name, "wb");
 					if(!$fp)
 					{
@@ -798,7 +798,7 @@ function profilepic_run()
 
 		$profilepicturemsg = $profilepictureurl = '';
 
-		if($mybb->user['profilepictype'] == "upload" || stristr($mybb->user['profilepic'], $mybb->settings['profilepicuploadpath']))
+		if($mybb->user['profilepictype'] == "upload" || stristr($mybb->user['profilepic'], $mybb->settings['profilepictureuploadpath']))
 		{
 			$profilepicturemsg = "<br /><strong>".$lang->already_uploaded_profile_picture."</strong>";
 		}
@@ -826,11 +826,11 @@ function profilepic_run()
 		}
 
 		$auto_resize = '';
-		if($mybb->settings['profilepicresizing'] == "auto")
+		if($mybb->settings['profilepictureresizing'] == "auto")
 		{
 			eval("\$auto_resize = \"".$templates->get("usercp_profilepicture_auto_resize_auto")."\";");
 		}
-		else if($mybb->settings['profilepicresizing'] == "user")
+		else if($mybb->settings['profilepictureresizing'] == "user")
 		{
 			eval("\$auto_resize = \"".$templates->get("usercp_profilepicture_auto_resize_user")."\";");
 		}
@@ -850,7 +850,7 @@ function profilepic_run()
 		$description = htmlspecialchars_uni($mybb->user['profilepicdescription']);
 
 		$profilepicturedescription = '';
-		if($mybb->settings['profilepicdescription'] == 1)
+		if($mybb->settings['profilepicturedescription'] == 1)
 		{
 			eval("\$profilepicturedescription = \"".$templates->get("usercp_profilepicture_description")."\";");
 		}
@@ -887,7 +887,7 @@ function profilepic_profile()
 		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
 		eval("\$profilepicture_img = \"".$templates->get("member_profile_profilepicture_profilepicture")."\";");
 
-		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicdescription'] == 1)
+		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicturedescription'] == 1)
 		{
 			$memprofile['profilepicdescription'] = htmlspecialchars_uni($memprofile['profilepicdescription']);
 			eval("\$description = \"".$templates->get("member_profile_profilepicture_description")."\";");
@@ -941,7 +941,7 @@ function profilepic_removal()
 	}
 
 	// Update description if active
-	if($mybb->settings['profilepicdescription'] == 1)
+	if($mybb->settings['profilepicturedescription'] == 1)
 	{
 		$updated_profilepicture = array(
 			"profilepicdescription" => $db->escape_string($mybb->input['profilepicturedescription'])
@@ -958,7 +958,7 @@ function profilepic_removal_lang()
 
 	$user['profilepicdescription'] = htmlspecialchars_uni($user['profilepicdescription']);
 
-	if($mybb->settings['profilepicdescription'] == 1)
+	if($mybb->settings['profilepicturedescription'] == 1)
 	{
 		eval("\$profilepicturedescription = \"".$templates->get("modcp_editprofile_profilepicture_description")."\";");
 	}
@@ -1035,7 +1035,7 @@ function profilepic_user_graph()
 	$table->construct_cell("<div style=\"width: 206px; height: 206px;\" class=\"user_avatar\"><img src=\"".htmlspecialchars_uni($user['profilepic'])."\" width=\"{$scaled_dimensions['width']}\" style=\"margin-top: {$profile_picture_top}px\" height=\"{$scaled_dimensions['height']}\" alt=\"\" /></div>", array('width' => 1));
 
 	$profilepicture_url = '';
-	if($user['profilepictype'] == "upload" || stristr($user['profilepic'], $mybb->settings['profilepicuploadpath']))
+	if($user['profilepictype'] == "upload" || stristr($user['profilepic'], $mybb->settings['profilepictureuploadpath']))
 	{
 		$current_profile_picture_msg = "<br /><strong>{$lang->user_current_using_uploaded_profile_picture}</strong>";
 	}
@@ -1082,11 +1082,11 @@ function profilepic_user_graph()
 	$table->output($lang->profile_picture.": ".htmlspecialchars_uni($user['username']));
 
 	// Custom profile picture
-	if($mybb->settings['profilepicresizing'] == "auto")
+	if($mybb->settings['profilepictureresizing'] == "auto")
 	{
 		$auto_resize = $lang->profile_picture_auto_resize;
 	}
-	else if($mybb->settings['profilepicresizing'] == "user")
+	else if($mybb->settings['profilepictureresizing'] == "user")
 	{
 		$auto_resize = "<input type=\"checkbox\" name=\"auto_resize\" value=\"1\" checked=\"checked\" id=\"auto_resize\" /> <label for=\"auto_resize\">{$lang->attempt_to_auto_resize_profile_picture}</label></span>";
 	}
@@ -1134,7 +1134,7 @@ function profilepic_user_commit()
 				$profilepicture_dimensions = $profilepicture['width']."|".$profilepicture['height'];
 			}
 			$extra_user_updates = array(
-				"profilepic" => $profilepicture['profilepic'].'?dateline='.TIME_NOW,
+				"profilepic" => $profilepicture['profilepicture'].'?dateline='.TIME_NOW,
 				"profilepicdimensions" => $profilepicture_dimensions,
 				"profilepictype" => "upload"
 			);
@@ -1185,7 +1185,7 @@ function profilepic_user_commit()
 				}
 				else
 				{
-					$tmp_name = "../".$mybb->settings['profilepicuploadpath']."/remote_".md5(random_str());
+					$tmp_name = "../".$mybb->settings['profilepictureuploadpath']."/remote_".md5(random_str());
 					$fp = @fopen($tmp_name, "wb");
 					if(!$fp)
 					{
@@ -1282,7 +1282,7 @@ function profilepic_chmod()
 	global $mybb, $lang, $table, $message_profile_picture;
 	$lang->load("profilepicture", true);
 
-	if(is_writable('../'.$mybb->settings['profilepicuploadpath']))
+	if(is_writable('../'.$mybb->settings['profilepictureuploadpath']))
 	{
 		$message_profile_picture = "<span style=\"color: green;\">{$lang->writable}</span>";
 	}
@@ -1293,7 +1293,7 @@ function profilepic_chmod()
 	}
 
 	$table->construct_cell("<strong>{$lang->profile_picture_upload_dir}</strong>");
-	$table->construct_cell($mybb->settings['profilepicuploadpath']);
+	$table->construct_cell($mybb->settings['profilepictureuploadpath']);
 	$table->construct_cell($message_profile_picture);
 	$table->construct_row();
 }
