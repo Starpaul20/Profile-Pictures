@@ -874,7 +874,7 @@ function profilepic_run()
 // Profile Picture display in profile
 function profilepic_profile()
 {
-	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepicture, $description;
+	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepicture, $description, $parser;
 	$lang->load("profilepicture");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
@@ -887,9 +887,9 @@ function profilepic_profile()
 		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
 		eval("\$profilepicture_img = \"".$templates->get("member_profile_profilepicture_profilepicture")."\";");
 
-		if($memprofile['profilepicdescription'] && $mybb->settings['profilepicturedescription'] == 1)
+		if(!empty($memprofile['profilepicdescription']) && $mybb->settings['profilepicturedescription'] == 1)
 		{
-			$memprofile['profilepicdescription'] = htmlspecialchars_uni($memprofile['profilepicdescription']);
+			$memprofile['profilepicdescription'] = htmlspecialchars_uni($parser->parse_badwords($memprofile['profilepicdescription']));
 			eval("\$description = \"".$templates->get("member_profile_profilepicture_description")."\";");
 		}
 
