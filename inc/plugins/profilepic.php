@@ -381,7 +381,7 @@ x=X',
 		<br /><span class="smalltext">{$lang->profile_picture_description_note}</span>
 	</td>
 	<td class="trow1" width="60%">
-		<input type="text" class="textbox" name="profilepicturedescription" size="100" value="{$description}" />
+		<textarea name="profilepicturedescription" id="profilepicturedescription" rows="4" cols="80" maxlength="255">{$description}</textarea>
 	</td>
 </tr>'),
 		'sid'		=> '-1',
@@ -495,7 +495,7 @@ x=X',
 	<td colspan="3"><span class="smalltext">{$lang->profile_picture_description}</span></td>
 </tr>
 <tr>
-	<td colspan="3"><textarea name="profilepicturedescription" id="profilepicturedescription" rows="4" cols="30">{$user[\'profilepicdescription\']}</textarea></td>
+	<td colspan="3"><textarea name="profilepicturedescription" id="profilepicturedescription" rows="4" cols="40" maxlength="255">{$user[\'profilepicdescription\']}</textarea></td>
 </tr>'),
 		'sid'		=> '-1',
 		'version'	=> '',
