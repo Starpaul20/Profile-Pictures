@@ -874,7 +874,7 @@ function profilepic_run()
 // Profile Picture display in profile
 function profilepic_profile()
 {
-	global $mybb, $db, $templates, $lang, $theme, $memprofile, $profilepicture, $description, $parser;
+	global $mybb, $templates, $lang, $theme, $memprofile, $profilepicture, $parser;
 	$lang->load("profilepicture");
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
@@ -887,6 +887,7 @@ function profilepic_profile()
 		$userprofilepicture = format_profile_picture($memprofile['profilepic'], $memprofile['profilepicdimensions']);
 		eval("\$profilepicture_img = \"".$templates->get("member_profile_profilepicture_profilepicture")."\";");
 
+		$description = '';
 		if(!empty($memprofile['profilepicdescription']) && $mybb->settings['profilepicturedescription'] == 1)
 		{
 			$memprofile['profilepicdescription'] = htmlspecialchars_uni($parser->parse_badwords($memprofile['profilepicdescription']));
@@ -928,7 +929,7 @@ function profilepic_removal()
 	global $mybb, $db, $user;
 	require_once MYBB_ROOT."inc/functions_profilepicture.php";
 
-	if($mybb->input['remove_profilepicture'])
+	if(!empty($mybb->input['remove_profilepicture']))
 	{
 		$updated_profilepicture = array(
 			"profilepic" => "",
@@ -953,11 +954,12 @@ function profilepic_removal()
 // Mod CP language
 function profilepic_removal_lang()
 {
-	global $mybb, $lang, $user, $templates, $profilepicturedescription, $profilepicture;
+	global $mybb, $lang, $user, $templates, $profilepicture;
 	$lang->load("profilepicture");
 
 	$user['profilepicdescription'] = htmlspecialchars_uni($user['profilepicdescription']);
 
+	$profilepicturedescription = '';
 	if($mybb->settings['profilepicturedescription'] == 1)
 	{
 		eval("\$profilepicturedescription = \"".$templates->get("modcp_editprofile_profilepicture_description")."\";");
@@ -1279,7 +1281,7 @@ function profilepic_usergroup_permission_commit()
 // Check to see if CHMOD for profile pictures is writable
 function profilepic_chmod()
 {
-	global $mybb, $lang, $table, $message_profile_picture;
+	global $mybb, $lang, $table;
 	$lang->load("profilepicture", true);
 
 	if(is_writable('../'.$mybb->settings['profilepictureuploadpath']))
