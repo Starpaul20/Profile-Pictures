@@ -11,7 +11,7 @@ if(!defined("IN_MYBB"))
 }
 
 // Neat trick for caching our custom template(s)
-if(my_strpos($_SERVER['PHP_SELF'], 'usercp.php'))
+if(THIS_SCRIPT == 'usercp.php')
 {
 	global $templatelist;
 	if(isset($templatelist))
@@ -21,7 +21,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'usercp.php'))
 	$templatelist .= 'usercp_profilepicture,usercp_profilepicture_auto_resize_auto,usercp_profilepicture_auto_resize_user,usercp_profilepicture_current,usercp_profilepicture_description,usercp_profilepicture_remote,usercp_profilepicture_remove,usercp_profilepicture_upload,usercp_nav_profilepicture';
 }
 
-if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
+if(THIS_SCRIPT == 'private.php')
 {
 	global $templatelist;
 	if(isset($templatelist))
@@ -31,7 +31,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'private.php'))
 	$templatelist .= 'usercp_nav_profilepicture';
 }
 
-if(my_strpos($_SERVER['PHP_SELF'], 'usercp2.php'))
+if(THIS_SCRIPT == 'usercp2.php')
 {
 	global $templatelist;
 	if(isset($templatelist))
@@ -41,7 +41,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'usercp2.php'))
 	$templatelist .= 'usercp_nav_profilepicture';
 }
 
-if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
+if(THIS_SCRIPT == 'member.php')
 {
 	global $templatelist;
 	if(isset($templatelist))
@@ -51,7 +51,7 @@ if(my_strpos($_SERVER['PHP_SELF'], 'member.php'))
 	$templatelist .= 'member_profile_profilepicture,member_profile_profilepicture_description,member_profile_profilepicture_profilepicture';
 }
 
-if(my_strpos($_SERVER['PHP_SELF'], 'modcp.php'))
+if(THIS_SCRIPT == 'modcp.php')
 {
 	global $templatelist;
 	if(isset($templatelist))
