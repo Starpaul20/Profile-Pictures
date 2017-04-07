@@ -285,5 +285,3 @@ function format_profile_picture($profilepicture, $dimensions = '', $max_dimensio
 
 	return $profilepictures[$profilepicture][$key][$key2];
 }
-
-?>

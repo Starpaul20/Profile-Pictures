@@ -69,5 +69,3 @@ $l['profile_picture_max_size'] = "Profile Pictures can be a maximum of";
 $l['profile_picture_desc'] = "Below you can manage the profile picture for this user. Profile Pictures are small identifying images shown in a user's profile.";
 $l['profile_picture_max_dimensions_are'] = "The maximum dimensions for profile pictures are";
 $l['attempt_to_auto_resize_profile_picture'] = "Attempt to resize this profile picture if it is too large?";
-
-?>

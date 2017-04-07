@@ -1299,5 +1299,3 @@ function profilepic_chmod()
 	$table->construct_cell($message_profile_picture);
 	$table->construct_row();
 }
-
-?>
