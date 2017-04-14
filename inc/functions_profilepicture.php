@@ -7,8 +7,8 @@
 /**
  * Remove any matching profile picture for a specific user ID
  *
- * @param int The user ID
- * @param string A file name to be excluded from the removal
+ * @param int $uid The user ID
+ * @param string $exclude A file name to be excluded from the removal
  */
 function remove_profilepicture($uid, $exclude="")
 {
@@ -42,8 +42,8 @@ function remove_profilepicture($uid, $exclude="")
 /**
  * Upload a new profile picture in to the file system
  *
- * @param srray incoming FILE array, if we have one - otherwise takes $_FILES['profilepictureupload']
- * @param string User ID this profile picture is being uploaded for, if not the current user
+ * @param array $profilepicture incoming FILE array, if we have one - otherwise takes $_FILES['profilepictureupload']
+ * @param int $uid User ID this profile picture is being uploaded for, if not the current user
  * @return array Array of errors if any, otherwise filename if successful.
  */
 function upload_profilepicture($profilepicture=array(), $uid=0)
@@ -210,9 +210,9 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 /**
  * Formats a profile picture to a certain dimension
  *
- * @param string The profile picture file name
- * @param string Dimensions of the profile picture, width x height (e.g. 44|44)
- * @param string The maximum dimensions of the formatted profile picture
+ * @param string $profilepicture The profile picture file name
+ * @param string $dimensions Dimensions of the profile picture, width x height (e.g. 44|44)
+ * @param string $max_dimensions The maximum dimensions of the formatted profile picture
  * @return array Information for the formatted profile picture
  */
 function format_profile_picture($profilepicture, $dimensions = '', $max_dimensions = '')
