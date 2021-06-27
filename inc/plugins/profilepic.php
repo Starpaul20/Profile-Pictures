@@ -11,54 +11,57 @@ if(!defined("IN_MYBB"))
 }
 
 // Neat trick for caching our custom template(s)
-if(THIS_SCRIPT == 'usercp.php')
+if(defined('THIS_SCRIPT'))
 {
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'usercp.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'usercp_profilepicture,usercp_profilepicture_auto_resize_auto,usercp_profilepicture_auto_resize_user,usercp_profilepicture_current,usercp_profilepicture_description,usercp_profilepicture_remote,usercp_profilepicture_remove,usercp_profilepicture_upload,usercp_nav_profilepicture';
 	}
-	$templatelist .= 'usercp_profilepicture,usercp_profilepicture_auto_resize_auto,usercp_profilepicture_auto_resize_user,usercp_profilepicture_current,usercp_profilepicture_description,usercp_profilepicture_remote,usercp_profilepicture_remove,usercp_profilepicture_upload,usercp_nav_profilepicture';
-}
 
-if(THIS_SCRIPT == 'private.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'private.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'usercp_nav_profilepicture';
 	}
-	$templatelist .= 'usercp_nav_profilepicture';
-}
 
-if(THIS_SCRIPT == 'usercp2.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'usercp2.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'usercp_nav_profilepicture';
 	}
-	$templatelist .= 'usercp_nav_profilepicture';
-}
 
-if(THIS_SCRIPT == 'member.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'member.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'member_profile_profilepicture,member_profile_profilepicture_description,member_profile_profilepicture_profilepicture';
 	}
-	$templatelist .= 'member_profile_profilepicture,member_profile_profilepicture_description,member_profile_profilepicture_profilepicture';
-}
 
-if(THIS_SCRIPT == 'modcp.php')
-{
-	global $templatelist;
-	if(isset($templatelist))
+	if(THIS_SCRIPT == 'modcp.php')
 	{
-		$templatelist .= ',';
+		global $templatelist;
+		if(isset($templatelist))
+		{
+			$templatelist .= ',';
+		}
+		$templatelist .= 'modcp_editprofile_profilepicture,modcp_editprofile_profilepicture_description';
 	}
-	$templatelist .= 'modcp_editprofile_profilepicture,modcp_editprofile_profilepicture_description';
 }
 
 // Tell MyBB when to run the hooks
