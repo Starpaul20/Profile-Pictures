@@ -622,7 +622,7 @@ function profilepic_run()
 			}
 
 			$profilepicture = upload_profilepicture();
-			if($profilepicture['error'])
+			if(!empty($profilepicture['error']))
 			{
 				$profilepicture_error = $profilepicture['error'];
 			}
@@ -811,6 +811,7 @@ function profilepic_run()
 			$profilepictureurl = htmlspecialchars_uni($mybb->user['profilepic']);
 		}
 
+		$currentprofilepicture = '';
 		if(!empty($mybb->user['profilepic']) && ((($mybb->user['profilepictype'] == 'remote' || $mybb->user['profilepictype'] == 'gravatar') && $mybb->settings['allowremoteprofilepictures'] == 1) || $mybb->user['profilepictype'] == "upload"))
 		{
 			$userprofilepicture = format_profile_picture(htmlspecialchars_uni($mybb->user['profilepic']), $mybb->user['profilepicdimensions'], '200x200');
@@ -999,7 +1000,7 @@ function profilepic_user_options($tabs)
 
 function profilepic_user_graph()
 {
-	global $lang, $form, $mybb, $user;
+	global $lang, $form, $mybb, $user, $errors;
 	$lang->load("profilepicture", true);
 
 	$profile_picture_dimensions = explode("|", $user['profilepicdimensions']);
@@ -1257,10 +1258,10 @@ function profilepic_user_commit()
 // Admin CP permission control
 function profilepic_usergroup_permission()
 {
-	global $mybb, $lang, $form, $form_container, $run_module;
+	global $mybb, $lang, $form, $form_container, $run_module, $page;
 	$lang->load("profilepicture", true);
 
-	if($run_module == 'user' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc)
+	if($run_module == 'user' && $page->active_action == 'groups' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc)
 	{
 		$profilepicture_options = array(
 			$form->generate_check_box('canuseprofilepic', 1, $lang->can_use_profile_picture, array("checked" => $mybb->input['canuseprofilepic'])),

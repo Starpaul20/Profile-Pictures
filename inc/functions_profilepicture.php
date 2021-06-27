@@ -58,7 +58,7 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 		$uid = $mybb->user['uid'];
 	}
 
-	if(!$profilepicture['name'] || !$profilepicture['tmp_name'])
+	if(empty($profilepicture['name']) || !$profilepicture['tmp_name'])
 	{
 		$profilepicture = $_FILES['profilepictureupload'];
 	}
@@ -89,7 +89,7 @@ function upload_profilepicture($profilepicture=array(), $uid=0)
 
 	$filename = "profilepic_".$uid.".".$ext;
 	$file = upload_file($profilepicture, $profilepicturepath, $filename);
-	if($file['error'])
+	if(!empty($file['error']))
 	{
 		delete_uploaded_file($profilepicturepath."/".$filename);
 		$ret['error'] = $lang->error_uploadfailed;
