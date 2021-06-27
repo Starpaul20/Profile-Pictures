@@ -515,7 +515,7 @@ x=X',
 	);
 	$db->insert_query("templates", $insert_array);
 
-	include MYBB_ROOT."/inc/adminfunctions_templates.php";
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("header", "#".preg_quote('{$bannedwarning}')."#i", '{$remote_profile_picture_notice}{$bannedwarning}');
 	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('{$changesigop}')."#i", '{$changesigop}<!-- profilepicture -->');
 	find_replace_templatesets("member_profile", "#".preg_quote('{$profilefields}')."#i", '{$profilefields}{$profilepicture}');
@@ -533,7 +533,7 @@ function profilepic_deactivate()
 	$db->delete_query("templates", "title IN('usercp_profilepicture','usercp_profilepicture_auto_resize_auto','usercp_profilepicture_auto_resize_user','usercp_profilepicture_current','member_profile_profilepicture','member_profile_profilepicture_description','member_profile_profilepicture_profilepicture','usercp_profilepicture_description','usercp_profilepicture_remote','usercp_profilepicture_remove','usercp_profilepicture_upload','usercp_nav_profilepicture','modcp_editprofile_profilepicture','modcp_editprofile_profilepicture_description','global_remote_profile_picture_notice')");
 	rebuild_settings();
 
-	include MYBB_ROOT."/inc/adminfunctions_templates.php";
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
 	find_replace_templatesets("header", "#".preg_quote('{$remote_profile_picture_notice}')."#i", '', 0);
 	find_replace_templatesets("member_profile", "#".preg_quote('{$profilepicture}')."#i", '', 0);
 	find_replace_templatesets("usercp_nav_profile", "#".preg_quote('<!-- profilepicture -->')."#i", '', 0);
