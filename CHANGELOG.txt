@@ -1,3 +1,6 @@
+1.5 (May 18th, 2024)
+- Fixed undefined errors on board with PHP 8.2
+
 1.4 (June 27th, 2021)
 - Added check to see if THIS_SCRIPT is defined
 - Fixed PHP 8.0 errors
