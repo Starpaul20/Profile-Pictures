@@ -906,7 +906,7 @@ function profilepic_profile()
 function profilepic_online_activity($user_activity)
 {
 	global $user;
-	if(my_strpos($user['location'], "usercp.php?action=profilepicture") !== false)
+	if(isset($user['location']) && my_strpos($user['location'], "usercp.php?action=profilepicture") !== false)
 	{
 		$user_activity['activity'] = "usercp_profilepicture";
 	}

@@ -238,6 +238,11 @@ function format_profile_picture($profilepicture, $dimensions = '', $max_dimensio
 		$dimensions = '';
 	}
 
+	if(!$max_dimensions)
+	{
+		$max_dimensions = $mybb->usergroup['profilepicmaxdimensions'];
+	}
+
 	// An empty key wouldn't work so we need to add a fall back
 	$key = $dimensions;
 	if(empty($key))
